@@ -3,8 +3,10 @@ Project Notes
 
 
 
-ResearchLinks
------
+Research Links
+--------------
+[Markdown Example](http://en.wikipedia.org/wiki/Markdown#Example)
+
 [https://www.cs.cf.ac.uk/PATS2/@archive_file?c=&p=file&p=245&n=initial&f=1-TPreston_C1126792_Initial_Plan.pdf](https://www.cs.cf.ac.uk/PATS2/@archive_file?c=&p=file&p=245&n=initial&f=1-TPreston_C1126792_Initial_Plan.pdf)
 
 [WordSmith – Building a Program that Plays Scrabble « Scott H Young](http://www.scotthyoung.com/blog/2013/02/21/wordsmith/)
