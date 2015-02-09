@@ -1,0 +1,141 @@
+\documentclass[letterpaper]{article}
+
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage{courier}
+
+\title{CS540 Research Project}
+
+\author{Casey Pore}
+
+\date{Spring 2015}
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+
+A section that has a sentence with a citation\cite{Dragland}. Blah blah blah...
+
+
+\section{Problem characterization} %500 words
+
+This is another section
+
+\subsection{Transparency}
+Here's a section that has an enumerated list:
+
+\begin{enumerate}
+\item "access transparency — hides the differences in data representation and procedure calling
+mechanism to enable interworking between heterogeneous computer systems;
+\item "location transparency — masks the use of physical addresses, including the distinction
+between local versus remote;
+\item "relocation transparency — hides the relocation of an object and its interfaces from other
+objects and interfaces bound to it;
+\item "migration transparency — masks the relocation of an object from that object and the
+objects with which it interacts;
+\item "persistence transparency — masks the deactivation and reactivation of an object;
+\item "failure transparency — masks the failure and possible recovery of objects, to enhance fault
+tolerance;
+\item "replication transparency — maintains consistency of a group of replica objects with a
+common interface; and
+\item "transaction transparency — hides the coordination required to satisfy the transactional
+properties of operations"\cite{ISO92}
+\end{enumerate}
+
+This list is not meant to be exhaustive of the requirements that may surface when designing a DFS, but should serve to cover the most frequently encountered ones.
+
+\subsection{Naming of Distributed Files}
+Here's some fixed-width text \texttt{//server1/dir/file}. Any client that wanted to access \texttt{//server/dir/file} need not be concerned with where that server is located (so long as they can access it). But now suppose that file hierarchy were to be migrated to another server, \texttt{//server2/dir/file}. Since the naming scheme does not support location independence, that is the path to file is absolute, the client can no longer access that file without knowledge of the new location.
+
+
+\newpage
+%references should be in the order they appear in the paper
+
+\begin{thebibliography}{99}
+\bibitem[1]{McCallum}
+John C. McCallum.
+Disk Drive Prices (1955-2013). \emph{http://www.jcmit.com}. 15 November 2013. \textless\url{http://www.jcmit.com/diskprice.htm}\textgreater .
+
+\bibitem[2]{Dragland}
+Åse Dragland.
+Big Data -- for better or worse.
+ \emph{SCINTEF}.
+Research News, 22 May 2013.
+\textless\url{ http://www.sintef.no/home/Press-Room/Research-News/Big-Data--for-better-or-worse/}\textgreater .
+
+%I know this is a shitty reference, but it was a good statistic straight from the source.
+\bibitem[3]{ATT}
+at\&t eSupport.
+Broadband usage FAQs \emph{at\&t}. 2014.
+\textless \url{http://www.att.com/esupport/article.jsp?sid=KB409045&cv=801#fbid=S6GEKm-1mJC}\textgreater.
+
+\bibitem[4]{CDKB12}
+George Couloris, Jean Dollimore, Tim Kindberg, and Gordon Blair.
+\emph{Distributed Systems: Concepts and Design}.
+Addison-Wesley, 2012; \textbf{527-528}.
+
+\bibitem[5]{ISO92}
+Kerry Raymond. \emph{Reference model of open distributed processing (RM-ODP): Introduction.} Open Distributed Processing. Springer US, 1995. \textbf{3-14}.
+
+\bibitem[6]{PK92}
+Paul Krzyzanowski. \emph{Distributed File Systems Design}. Lectures on Distributed Systems, 2002. \textless\url{http://www.cs.rutgers.edu/~pxk/rutgers/notes/content/05-dfs.pdf}\textgreater .
+
+\bibitem[7]{COMER84}
+Douglas E. Comer, and Larry J. Peterson. \emph{A Name Resolution Model for Distributed Systems}. (1984). \textbf{3}.
+
+\bibitem[8]{OSF91}
+Open Software Foundation. \emph{File Systems in a Distributed Computing Environment.} Open Software Foundation, 1991. \textbf{2}. \textless\url{http://www.opengroup.org/dce/info/papers/osf-o-wp8-0990-2.ps}\textgreater .
+
+\bibitem[9]{Kim05}
+Kim, H.S.; Yeom, H.Y., \emph{A user-transparent recoverable file system for distributed computing environment.} Challenges of Large Applications in Distributed Environments. CLADE 2005. \textbf{45,53}.
+
+\bibitem[10]{GGL03}
+Sanjay Ghemawat, Howard Gobioff, and Shun-Tak Leung. 2003. \emph{The Google file system.} SIGOPS Oper. Syst. Rev. 37, 5 (October 2003), \textbf{29-43}.
+
+\bibitem[11]{Rod10}
+Rodrigo Rodrigues, Peter Druschel. \emph{Peer-to-Peer Systems.}
+Communications of the ACM, 2010. Vol. 53 No. 10. \textbf{72-82}.
+
+\bibitem[12]{Kil02}
+Kilchenman, R. \emph{Design and implementation of a distributed object storage system on peer nodes.} Diss. Master’s thesis, Universität Mannheim/Institut Eurécom, Sophia-Antipolis, France, 2002.
+
+\bibitem[13]{Fernandes}
+Silas Evandro Nachif Fernandes, Renata Spolon Lobato, Aleardo Manacero Jr., Roberta Spolon, Marcos A Cavenaghi: UNESP - Sao Paulo State University, Brazil.
+\newblock{A Flexible and Adaptable Distributed File System.} \emph{PDPTA'13}. World Congress in Computer Science Computer Engineering and Applied Computing, 25 July 2013.
+\newblock\textless\url{http://www.world-academy-of-science.org/worldcomp13/ws/program/pdp25}\textgreater .
+
+\bibitem[14]{Hadoop Architecture}
+{HDFS Architecture. Version 2.2.0, 07 Oct 2007.}
+\newblock\textless \url{http://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/HdfsDesign.html}\textgreater.  
+
+\bibitem[15]{Kosha}
+Butt, A, Johnson, T, Zheng, Y, and Hu, Y. "Kosha: A peer-to-peer Enhancement for the Network File System." ACM/IEEE conference on supercomputing, 2004.
+
+\bibitem[16]{Tahoe-LAFS}
+Wilcox-O'Hearn, Z and Warner, B. "Tahoe - The Least-Authority Filesystem." ACM, October 2008.
+
+%Begin: "insights gleaned" references
+\bibitem[17]{intel}
+Intel. "Survey of IT professionals on cloud computing solutions." Intel.com, 2012.
+
+%Begin: "How will the problem space transform in the future?" references
+\bibitem[18]{ZFW12}
+Quan Zhang, Dan Feng, Fang Wang. \emph{Metadata Performance Optimization in Distributed File System.} Computer and Information Science (ICIS), 2012. IEEE/ACIS 11th International Conference \textbf{476,481}. May 30 2012-June 1 2012
+
+%Begin: "Trade-off space and solutions in the future?" references
+\bibitem[19]{HHHY13}
+    Hsiao, Hung-Chang; Chung, Hsueh-Yi; Shen, Haiying; Chao, Yu-Chang, \emph{Load Rebalancing for Distributed File Systems in Clouds.} Parallel and Distributed Systems, IEEE Transactions on , vol.24, no.5, \textbf{951}. May 2013
+
+\bibitem[20]{VGVK12}
+Vardhan, M.; Goel, A.; Verma, A.; Kushwaha, D.S., \emph{Demand Based File Replication and Consistency Mechanism.} Computer and Communication Technology (ICCCT), 2012 Third International Conference on, \textbf{335,339}. 23-25 Nov. 2012
+
+\bibitem[21]{data}
+John Gantz and David Reinsel. \emph{Extracting Value from Chaos.} EMC Digital Universe, 2011. \url{http://www.emc.com/collateral/analyst-reports/idc-extracting-value-from-chaos-ar.pdf}
+
+\end{thebibliography}
+
+\end{document}
