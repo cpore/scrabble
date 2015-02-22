@@ -1,0 +1,21 @@
+\begin{thebibliography}{}
+
+\bibitem[\protect\citeauthoryear{Shapiro and Smith}{1982}]{Shapiro1982}
+Shapiro, S.~C., and Smith, H.~R.
+\newblock 1982.
+\newblock A scrabble crossword game playing program.
+\newblock Technical Report 119, Indiana University.
+
+\bibitem[\protect\citeauthoryear{Torre and Verducci}{2008}]{Torre2008}
+Torre, J., and Verducci, T.
+\newblock 2008.
+\newblock {\em The Yankee Years}.
+\newblock Doubleday.
+
+\bibitem[\protect\citeauthoryear{Young}{2013}]{Young2013}
+Young, S.
+\newblock 2013.
+\newblock Building a program that plays scrabble.
+\newblock http://www.scotthyoung.com/blog/2013/02/21/wordsmith/.
+
+\end{thebibliography}

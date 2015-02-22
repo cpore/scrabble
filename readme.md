@@ -9,8 +9,6 @@ Research Links
 
 [Project Description](http://www.cs.colostate.edu/~cs540/spr2015/more_assignments/project540S15.htm)
 
-[https://www.cs.cf.ac.uk/PATS2/@archive_file?c=&p=file&p=245&n=initial&f=1-TPreston_C1126792_Initial_Plan.pdf](https://www.cs.cf.ac.uk/PATS2/@archive_file?c=&p=file&p=245&n=initial&f=1-TPreston_C1126792_Initial_Plan.pdf)
-
 [WordSmith – Building a Program that Plays Scrabble « Scott H Young](http://www.scotthyoung.com/blog/2013/02/21/wordsmith/)
 
 [ubtr119.pdf](http://www.cse.buffalo.edu/~shapiro/Papers/ubtr119.pdf)
@@ -29,6 +27,6 @@ Research Links
 
 [paper16.pdf](http://ceur-ws.org/Vol-860/paper16.pdf)
 
-[scrabble-ijcai07.pdf](http://reason.cs.uiuc.edu/eyal/papers/scrabble-ijcai07.pdf)
+[Opponent Modeling in Scrabble](http://www.aaai.org/Papers/IJCAI/2007/IJCAI07-239)
 
 [A Faster Scrabble Move Generation Algorithm - faster-scrabble-gordon.pdf](http://www.eecs.northwestern.edu/~robby/uc-courses/22001-2008-winter/faster-scrabble-gordon.pdf)
