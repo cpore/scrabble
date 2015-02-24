@@ -1,7 +1,9 @@
 Project Notes
 =============
 
-
+Libraries
+------------
+[icantrap/android-dawg · GitHub](https://github.com/icantrap/android-dawg)
 
 Research Links
 --------------
