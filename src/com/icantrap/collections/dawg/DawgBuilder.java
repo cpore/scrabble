@@ -12,7 +12,7 @@ import java.util.*;
  * trie is compressed into a dawg.
  */
 
-class DawgBuilder
+public class DawgBuilder
 {
   private final Node root = new Node ((char) 0);
   private int wordCount = 0;
