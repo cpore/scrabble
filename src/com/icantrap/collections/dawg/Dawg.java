@@ -4,6 +4,7 @@ package com.icantrap.collections.dawg;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -701,7 +702,7 @@ public class Dawg {
 	}
 
 	public static void main(String[] args) throws IOException {
-		Dawg dawg = Dawg.load(Dawg.class.getResourceAsStream("/twl06.dat"));
+		Dawg dawg = Dawg.load(new FileInputStream("dawg/sowpods.dat"));
 
 		InputStreamReader isr = new InputStreamReader(System.in);
 		BufferedReader reader = new BufferedReader(isr);

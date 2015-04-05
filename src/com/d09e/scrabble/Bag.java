@@ -43,8 +43,7 @@ public class Bag {
 		}
 		
 		for(int i=0; i<2; i++){
-			tiles.add(new Tile(id++, ' ', 0));
-			tiles.add(new Tile(id++, ' ', 0));
+			tiles.add(new Tile(id++, '?', 0));
 			tiles.add(new Tile(id++, 'B', 3));
 			tiles.add(new Tile(id++, 'C', 3));
 			tiles.add(new Tile(id++, 'M', 3));

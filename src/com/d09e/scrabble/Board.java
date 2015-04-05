@@ -17,16 +17,40 @@ public class Board {
 		}
 	}
 
-	public void placeTile(int i, int j, Tile t){
-		try {
-			squares[i][j].placeTile(t);
-		} catch (InvalidPlacementException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	//Copy ctor
+	public Board(Board b) {
+		//initialize squares
+		for(int i=0; i<ROWS; i++){
+			for(int j=0; j<COLS; j++){
+				squares[i][j] = b.squares[i][j].copy();
+			}
 		}
 	}
 
-	public void placeWord(String word, Square start, Square End){
+	public Board copy(){
+		return new Board(this);
+	}
+
+	/**
+	 * precondition: word and placement are legal
+	 * @param dir
+	 * @param start
+	 * @param word
+	 * @throws InvalidPlacementException 
+	 */
+	public void placeWord(int dir, int i, int j, Tile[] wordTiles) throws InvalidPlacementException{
+		int tileIdx = 0;
+		if(dir == D.HORIZONTAL){
+			for(int col = j; tileIdx<wordTiles.length; col++){
+				squares[i][col].placeTile(wordTiles[tileIdx++]);
+			}
+		}else if(dir == D.VERTICAL){
+			for(int row = i; tileIdx<wordTiles.length; row++){
+				squares[row][j].placeTile(wordTiles[tileIdx++]);
+			}
+		}else{
+			throw new InvalidPlacementException("Direction not specified");
+		}
 
 	}
 
@@ -71,6 +95,9 @@ public class Board {
 
 		private Tile tile = null;
 
+		private int i;
+		private int j;
+
 		public Square(int i, int j){
 			isDoubleLetter = Util.isDoubleLetter(i, j);
 			isDoubleWord = Util.isDoubleWord(i, j);
@@ -88,8 +115,15 @@ public class Board {
 			isStar = Util.isStar(i, j);
 		}
 
+		public Square copy(){
+			Tile t = null;
+			if(tile != null)
+				t = tile.copy();
+			return new Square(i, j, t);
+		}
+
 		public void placeTile(Tile tile) throws InvalidPlacementException{
-			if(this.tile != null) throw new InvalidPlacementException("Square not empty, contains:" + tile.getLetter());
+			if(this.tile != null) throw new InvalidPlacementException("Square not empty, contains:" + this.tile.getLetter());
 			this.tile = tile;
 		}
 
@@ -112,7 +146,10 @@ public class Board {
 		public String bottomOfSquare(){
 			if(tile == null) return "    ";
 
-			return " " + String.valueOf(tile.getLetter()) + String.valueOf(tile.getValue());
+			if(tile.getValue() == 10){
+				return " " + String.valueOf(tile.getLetter()) + String.valueOf(tile.getValue());
+			}
+			return " " + String.valueOf(tile.getLetter()) + String.valueOf(tile.getValue()) + " ";
 
 		}
 

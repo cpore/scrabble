@@ -2,7 +2,8 @@ package com.d09e.scrabble;
 
 import java.util.ArrayList;
 
-public class Game {
+public class GameState {
+	
 	private Bag bag;
 	private Board board;
 	
@@ -10,21 +11,48 @@ public class Game {
 	
 	private Player currentPlayer;
 	
-	public Game(){
+	public GameState(){
 		players = new ArrayList<Player>();
-		currentPlayer = new Player("Player 1", true);
-		players.add(currentPlayer);
+		players.add(new Player("Player 1", true));
 		players.add(new Player("Player 2", true));
 		bag = new Bag();
 		board = new Board();
 		
 		playersDrawTiles();
+		
+		start();
 	}
 	
 	public void printBoard(){
 		board.printBoard();
 	}
 	
+	private void start(){
+		int i = 0;
+		while(!gameOver()){
+			currentPlayer = players.get(i);
+			
+			getPlayerInput();
+			
+			
+			if(i == players.size()-1){
+				i = 0;
+				continue;
+			}
+			i++;
+		}
+	}
+	
+	private void getPlayerInput() {
+		currentPlayer.getMove(board);
+		
+	}
+
+	private boolean gameOver() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 	/**
 	 * Draw 7 tiles for each player
 	 */
@@ -35,4 +63,5 @@ public class Game {
 			}
 		}
 	}
+	
 }

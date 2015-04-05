@@ -11,6 +11,10 @@ public class Tile {
 		this.value = value;
 	}
 	
+	public Tile copy(){
+		return new Tile(id, letter, value);
+	}
+	
 	public char getLetter() {
 		return letter;
 	}
