@@ -44,7 +44,7 @@ public class GameState {
 	}
 	
 	private void getPlayerInput() {
-		currentPlayer.getMove(board);
+		currentPlayer.getMove(board, bag);
 		
 	}
 

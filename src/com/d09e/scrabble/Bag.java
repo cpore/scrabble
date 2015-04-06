@@ -65,6 +65,19 @@ public class Bag {
 		Collections.shuffle(tiles);
 	}
 	
+	public Bag(ArrayList<Tile> tiles){
+		this.tiles = tiles;
+	}
+	
+	public Bag copy(){
+		ArrayList<Tile> newTiles = new ArrayList<Tile>();
+		for(Tile t: tiles){
+			newTiles.add(t.copy());
+		}
+		
+		return new Bag(newTiles);
+	}
+	
 	public Tile drawTile(){
 		return tiles.remove(new Random().nextInt(tiles.size()));
 	}

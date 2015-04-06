@@ -36,8 +36,6 @@ public class Scrabble {
 
 		}
 
-		board[7][7] = '*';
-
 		// This adds all of the letter tiles in Scrabble to the collection of
 		// letters
 		for (int count = 0; count < 9; count++)
