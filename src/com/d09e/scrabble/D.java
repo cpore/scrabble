@@ -1,46 +1,25 @@
 package com.d09e.scrabble;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 import com.d09e.scrabble.exception.InvalidPlacementException;
-import com.icantrap.collections.dawg.Dawg;
 import com.icantrap.collections.dawg.Dawg.Result;
 
 public class D {
 
-	public static Dawg dawg;
-
+	//TODO deal with bad rack, swap?
+	
 	public static final int HORIZONTAL = 0;
 	public static final int VERTICAL = 1;
 
-	public D(){
-		loadDawg();
-
-	}
-
-	private static void loadDawg(){
-		try {
-			System.out.println("Loading DAWG");
-			dawg = Dawg.load(new FileInputStream("dawg/sowpods.dat"));
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+	private D(){ }
 
 	public static boolean isValidWord(String word){
-		if(dawg == null) loadDawg();
 
 		if(word.contains("?")){
 			String pattern = word.replace("?", ".");
-			for(Result r: dawg.subwords(word, word)){
+			for(Result r: Scrabble.dawg.subwords(word, word)){
 				if(r.word.matches(pattern)){
 					//System.out.println(r.word);
 					return true;
@@ -48,16 +27,15 @@ public class D {
 			}
 			return false;
 		}
-		return dawg.contains(word);
+		return Scrabble.dawg.contains(word);
 	}
 
 	public static Result[] getSubwords(String rack){
-		return dawg.subwords(rack, "");
+		return Scrabble.dawg.subwords(rack, "");
 	}
 
 	/**
-	 * Checks that a word is placed within board bounds AND the squares don't
-	 * already contain a tile.
+	 * Checks that a word is placed within board bounds.
 	 * @param board
 	 * @param dir
 	 * @param row
@@ -143,26 +121,27 @@ public class D {
 	}
 
 	private static boolean hPlacementOk(Board board, int row, int col){
+		// check that this horizontally placed word is valid
 		if(!isHWordOk(board, row, col)){
 			System.out.println("Bad Horizontal word");
 			return false;
 		}
 
-		// Go to the northmost position of vertical cluster
+		// Go to the westmost position of vertical cluster
 		int startCol = col;
 		while(board.hasWestNeighbor(row, startCol)){
 			startCol--;
 		}
-
+		
+		
+		//check all the vertical words that cross this horizontal word
 		if(board.hasNorthNeighbor(row, startCol) || board.hasSouthNeighbor(row, startCol)){
 			if(!isVWordOk(board, row, startCol)){
 				return false;
 			}
 		}
 
-		while(board.hasSouthNeighbor(row, startCol)){
-			startCol++;
-
+		while(board.hasSouthNeighbor(row, startCol++)){
 			if(board.hasNorthNeighbor(row, startCol) || board.hasSouthNeighbor(row, startCol)){
 				if(!isVWordOk(board, row, startCol)){
 					return false;
@@ -174,7 +153,7 @@ public class D {
 	}
 
 	private static boolean vPlacementOk(Board board, int row, int col){
-
+		// check that this vertically placed word is valid
 		if(!isVWordOk(board, row, col)){
 			System.out.println("Bad Vertical word");
 			return false;
@@ -186,6 +165,8 @@ public class D {
 			startRow--;
 		}
 
+		
+		//check all the horizontal words that cross this vertical word
 		if(board.hasEastNeighbor(startRow, col) || board.hasWestNeighbor(startRow, col)){
 			if(!isHWordOk(board, startRow, col)){
 				return false;
@@ -193,7 +174,6 @@ public class D {
 		}
 
 		while(board.hasSouthNeighbor(startRow++, col)){
-
 			if(board.hasEastNeighbor(startRow, col) || board.hasWestNeighbor(startRow, col)){
 				if(!isHWordOk(board, startRow, col)){
 					return false;
@@ -230,19 +210,26 @@ public class D {
 			startRow--;
 		}
 		ArrayList<Tile> tiles = new ArrayList<Tile>(Arrays.asList(wordTiles));
-		
+		System.out.print("Tiles: ");
+		for(Tile t: tiles)
+			System.out.print(t);
 		Tile t = board.getTile(startRow, col);
+		String word = "";
+		word += t.getLetter();
 		if(!tiles.contains(t)){
 			return true;
 		}
 		
-		while(board.hasSouthNeighbor(startRow++, col));{
+		while(board.hasSouthNeighbor(startRow++, col)){
 			t = board.getTile(startRow, col);
+			word += t.getLetter();
 			if(!tiles.contains(t)){
+				System.out.print(word);
 				return true;
 			}
 		}
 
+		System.out.println("isVWordConnected: " + word);
 		System.out.println("Vertical Word not connected to a cluster.");
 		return false;
 
@@ -250,24 +237,28 @@ public class D {
 	
 	private static boolean isHWordConnected(Board board, int row, int startCol, Tile[] wordTiles){
 		if(board.firstMove) return true;
-		// Go to the northmost position of vertical cluster
-		while(board.hasNorthNeighbor(row, startCol)){
+		// Go to the westmost position of vertical cluster
+		while(board.hasWestNeighbor(row, startCol)){
 			startCol--;
 		}
 		ArrayList<Tile> tiles = new ArrayList<Tile>(Arrays.asList(wordTiles));
 		
+		String word = "";
 		Tile t = board.getTile(row, startCol);
+		word += t.getLetter();
 		if(!tiles.contains(t)){
 			return true;
 		}
 		
-		while(board.hasSouthNeighbor(row, startCol++)){
+		while(board.hasEastNeighbor(row, startCol++)){
 			t = board.getTile(row, startCol);
+			word += t.getLetter();
 			if(!tiles.contains(t)){
 				return true;
 			}
 		}
 
+		System.out.println("isHWordConnected: " + word);
 		System.out.println("Horizontal Word not connected to a cluster.");
 		return false;
 
@@ -287,7 +278,7 @@ public class D {
 			word += board.getTile(row, startCol).getLetter();
 		}
 
-		System.out.println(word);
+		System.out.println("isHWordOK: " + word);
 		return isValidWord(word);
 
 	}

@@ -2,11 +2,12 @@ package com.d09e.scrabble;
 
 public class Tile {
 
-	private int id; // used to differentiate between tiles of same letter
+	public int id; // used to differentiate between tiles of same letter
 	private char letter;
 	private int value;
 	
 	public Tile(int id, char letter, int value){
+		this.id = id;
 		this.letter = letter;
 		this.value = value;
 	}

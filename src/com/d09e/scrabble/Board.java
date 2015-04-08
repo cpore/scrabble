@@ -2,7 +2,6 @@ package com.d09e.scrabble;
 
 import com.d09e.scrabble.exception.InvalidPlacementException;
 
-
 public class Board {
 	public static final int ROWS = 15;
 	public static final int COLS = 15;
@@ -46,14 +45,15 @@ public class Board {
 	public Tile getTile(int row, int col){
 		return squares[row][col].getTile();
 	}
+	
+	public int getTileMultiplier(int row, int col){
+		return squares[row][col].getTileMultiplier();
+	}
+	
+	public int getWordMultiplier(int row, int col){
+		return squares[row][col].getWordMultiplier();
+	}
 
-	/**
-	 * precondition: word and placement are legal
-	 * @param dir
-	 * @param start
-	 * @param word
-	 * @throws InvalidPlacementException 
-	 */
 	public void placeWord(int dir, int i, int j, Tile[] wordTiles) throws InvalidPlacementException{
 		int tileIdx = 0;
 		if(dir == D.HORIZONTAL){
@@ -67,7 +67,7 @@ public class Board {
 		}else if(dir == D.VERTICAL){
 			for(int row = i; tileIdx<wordTiles.length; row++){
 				//jump over used squares
-				while(squares[row][i].hasTile()){
+				while(squares[row][j].hasTile()){
 					row++;
 				}
 				squares[row][j].placeTile(wordTiles[tileIdx++]);
@@ -104,7 +104,11 @@ public class Board {
 			System.out.println();
 			System.out
 			.println("   +----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+");
+			
 		}
+		System.out
+		.println(  "     0    1    2    3    4    5    6    7    8    9    10   11   12   13   14");
+
 	}
 
 	public static boolean inBoardBounds(int i, int j){
@@ -178,6 +182,8 @@ public class Board {
 			isTripleLetter = Util.isTripleLetter(i, j);
 			isTripleWord = Util.isTripleWord(i, j);
 			isStar = Util.isStar(i, j);
+			this.i = i;
+			this.j = j;
 		}
 
 		public Square(int i, int j, Tile tile){
@@ -187,10 +193,32 @@ public class Board {
 			isTripleLetter = Util.isTripleLetter(i, j);
 			isTripleWord = Util.isTripleWord(i, j);
 			isStar = Util.isStar(i, j);
+			this.i = i;
+			this.j = j;
 		}
 
 		public Tile getTile(){
 			return tile;
+		}
+		
+		public int getTileMultiplier(){
+			int multiplier = 1;
+			if(isDoubleLetter)
+				multiplier = 2;
+			else if(isTripleLetter)
+				multiplier = 3;
+			
+			return multiplier;
+		}
+		
+		public int getWordMultiplier(){
+			int multiplier = 1;
+			if(isDoubleWord || isStar)
+				multiplier = 2;
+			else if(isTripleWord)
+				multiplier = 3;
+			
+			return multiplier;
 		}
 
 		public Square copy(){

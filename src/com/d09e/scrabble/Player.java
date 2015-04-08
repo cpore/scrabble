@@ -1,14 +1,12 @@
 package com.d09e.scrabble;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.InputMismatchException;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 import com.d09e.scrabble.exception.InvalidPlacementException;
 import com.icantrap.collections.dawg.Dawg.Result;
-import com.sun.xml.internal.fastinfoset.algorithm.BuiltInEncodingAlgorithm.WordListener;
 
 public class Player {
 
@@ -95,7 +93,7 @@ public class Player {
 		Scanner scanner = new Scanner(System.in);
 		boolean moveOk = false;
 		while(!moveOk){
-			System.out.print(name + " ");
+			System.out.print(name + ": " + score + " ");
 			printRack();
 			System.out.println("enter h or v and start square and letters to play(in order)\nor c for hints\nor press enter to print board:  ");
 			String move = scanner.nextLine();
@@ -144,6 +142,7 @@ public class Player {
 
 				try {
 					placeWord(board, bag, dir, row, col, word);
+					score += Score.getScore(board, dir, row, col);
 				} catch (InvalidPlacementException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
