@@ -82,6 +82,10 @@ public class Bag {
 		return tiles.remove(new Random().nextInt(tiles.size()));
 	}
 	
+	public boolean isEmpty(){
+		return tiles.isEmpty();
+	}
+	
 	/**
 	 * Given a board (state) remove tiles from the bag that are already on the board.
 	 * @param board

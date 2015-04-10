@@ -266,27 +266,6 @@ public class Board {
 
 		}
 
-		public boolean isStar(){
-			return isStar;
-		}
-
-		public boolean isDoubleLetter(){
-			return isDoubleLetter;
-		}
-
-		public boolean isDoubleWord(){
-			return isDoubleWord;
-		}
-
-		public boolean isTripleLetter(){
-			return isTripleLetter;
-		}
-
-		public boolean isTripleWord(){
-			return isTripleWord;
-		}
-
-
 		@Override
 		public String toString() {
 			return "Square [tile=" + tile + "]";

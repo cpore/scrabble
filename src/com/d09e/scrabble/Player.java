@@ -49,10 +49,6 @@ public class Player {
 		rack.add(tile);
 	}
 
-	public void removeTile(Tile tile) {
-		rack.remove(tile);
-	}
-
 	public ArrayList<Tile> getRack(){
 		return rack;
 	}
@@ -73,29 +69,29 @@ public class Player {
 		return isHuman;
 	}
 
-	public void getMove(Board board, Bag bag) {
+	public void getMove(GameState gameState) {
 		if(isHuman){
-			promptForWord(board, bag);
+			promptForWord(gameState);
 		}else{
-			findBestWord(board, bag);
+			findBestWord(gameState);
 		}
 
 	}
 
-	private String findBestWord(Board board, Bag bag) {
+	private String findBestWord(GameState gameState) {
 		// TODO
 		return "";
 
 	}
 
-	private void promptForWord(Board board, Bag bag) {
+	private void promptForWord(GameState gameState) {
 
 		Scanner scanner = new Scanner(System.in);
 		boolean moveOk = false;
 		while(!moveOk){
 			System.out.print(name + ": " + score + " ");
 			printRack();
-			System.out.println("enter h or v and start square and letters to play(in order)\nor c for hints\nor press enter to print board:  ");
+			System.out.println("enter h or v and start square and letters to play(in order)\nor c for hints\nor s for scores\nor press enter to print board:  ");
 			String move = scanner.nextLine();
 			Scanner lineScanner = new Scanner(move);
 			String cmd = null;
@@ -103,7 +99,8 @@ public class Player {
 			try{
 				cmd = lineScanner.next();
 			}catch(NoSuchElementException nsee){
-				board.printBoard();
+				gameState.printScores();
+				gameState.printBoard();
 				continue;
 			}
 			int dir = -1;
@@ -115,6 +112,9 @@ public class Player {
 				for(Result r: D.getSubwords(getRackString())){
 					System.out.println(r.word);
 				}
+				continue;
+			}else if(cmd.equalsIgnoreCase("s")){
+				gameState.printScores();
 				continue;
 			}
 
@@ -137,12 +137,13 @@ public class Player {
 
 			System.out.println(String.valueOf(row) + " " + String.valueOf(col) + " " + word);
 
-			// TODO do checks, MOAR CHECKS!
-			if(D.isValidMove(board, dir, row, col, word, getWordTiles(word))){
+			Board board = gameState.getBoard();
+			Tile[] playedTiles = getWordTiles(word);
+			if(D.isValidMove(board, dir, row, col, word, playedTiles)){
 
 				try {
-					placeWord(board, bag, dir, row, col, word);
-					score += Score.getScore(board, dir, row, col);
+					placeWord(board, gameState.getBag(), dir, row, col, playedTiles);
+					score += Score.getScore(board, dir, row, col, playedTiles);
 				} catch (InvalidPlacementException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -158,18 +159,14 @@ public class Player {
 		//scanner.close();
 	}
 	
-	private void placeWord(Board board, Bag bag, int dir, int row, int col, String word) throws InvalidPlacementException{
-		Tile[] wordTiles = getWordTiles(word);
+	private void placeWord(Board board, Bag bag, int dir, int row, int col, Tile[] wordTiles) throws InvalidPlacementException{
 		board.placeWord(dir, row, col, wordTiles);
-		printRack();
 		
 		for(int i=0; i<wordTiles.length; i++){
 			rack.remove(wordTiles[i]);
-			rack.add(bag.drawTile());
+			if(!bag.isEmpty()) rack.add(bag.drawTile());
 		}
-		printRack();
 	}
-
 
 	private Tile[] getWordTiles(String word){
 		Tile[] tiles = new Tile[word.length()];

@@ -43,7 +43,7 @@ public class D {
 	 * @param word
 	 * @return
 	 */
-	public static boolean wordInBoardBounds(Board board, int dir, int row, int col, String word){
+	private static boolean wordInBoardBounds(Board board, int dir, int row, int col, String word){
 		if(dir == HORIZONTAL){
 			for(int i=col; i<(word.length() + col); i++){
 				if(i<0 || i>=Board.COLS) return false;
@@ -203,67 +203,6 @@ public class D {
 
 	}
 	
-	private static boolean isVWordConnected(Board board, int startRow, int col, Tile[] wordTiles){
-		if(board.firstMove) return true;
-		// Go to the northmost position of vertical cluster
-		while(board.hasNorthNeighbor(startRow, col)){
-			startRow--;
-		}
-		ArrayList<Tile> tiles = new ArrayList<Tile>(Arrays.asList(wordTiles));
-		System.out.print("Tiles: ");
-		for(Tile t: tiles)
-			System.out.print(t);
-		Tile t = board.getTile(startRow, col);
-		String word = "";
-		word += t.getLetter();
-		if(!tiles.contains(t)){
-			return true;
-		}
-		
-		while(board.hasSouthNeighbor(startRow++, col)){
-			t = board.getTile(startRow, col);
-			word += t.getLetter();
-			if(!tiles.contains(t)){
-				System.out.print(word);
-				return true;
-			}
-		}
-
-		System.out.println("isVWordConnected: " + word);
-		System.out.println("Vertical Word not connected to a cluster.");
-		return false;
-
-	}
-	
-	private static boolean isHWordConnected(Board board, int row, int startCol, Tile[] wordTiles){
-		if(board.firstMove) return true;
-		// Go to the westmost position of vertical cluster
-		while(board.hasWestNeighbor(row, startCol)){
-			startCol--;
-		}
-		ArrayList<Tile> tiles = new ArrayList<Tile>(Arrays.asList(wordTiles));
-		
-		String word = "";
-		Tile t = board.getTile(row, startCol);
-		word += t.getLetter();
-		if(!tiles.contains(t)){
-			return true;
-		}
-		
-		while(board.hasEastNeighbor(row, startCol++)){
-			t = board.getTile(row, startCol);
-			word += t.getLetter();
-			if(!tiles.contains(t)){
-				return true;
-			}
-		}
-
-		System.out.println("isHWordConnected: " + word);
-		System.out.println("Horizontal Word not connected to a cluster.");
-		return false;
-
-	}
-
 	private static boolean isHWordOk(Board board, int row, int startCol){
 		// Go to the westmost position of horizontal cluster
 		while(board.hasWestNeighbor(row, startCol)){
@@ -283,5 +222,59 @@ public class D {
 
 	}
 
+	private static boolean isVWordConnected(Board board, int startRow, int col, Tile[] wordTiles){
+		if(board.firstMove) return true;
+		// Go to the northmost position of vertical cluster
+		while(board.hasNorthNeighbor(startRow, col)){
+			startRow--;
+		}
+		ArrayList<Tile> tiles = new ArrayList<Tile>(Arrays.asList(wordTiles));
+		Tile t = board.getTile(startRow, col);
+		if(!tiles.contains(t) || board.hasEastNeighbor(startRow, col) || board.hasWestNeighbor(startRow, col)){
+			return true;
+		}
+		
+		while(board.hasSouthNeighbor(startRow++, col)){
+			t = board.getTile(startRow, col);
+			if(!tiles.contains(t) || board.hasEastNeighbor(startRow, col) || board.hasWestNeighbor(startRow, col)){
+				return true;
+			}
+		}
+
+		System.out.println("Vertical Word not connected to a cluster.");
+		return false;
+
+	}
+	
+	private static boolean isHWordConnected(Board board, int row, int startCol, Tile[] wordTiles){
+		if(board.firstMove) return true;
+		// Go to the westmost position of vertical cluster
+		while(board.hasWestNeighbor(row, startCol)){
+			startCol--;
+		}
+		ArrayList<Tile> tiles = new ArrayList<Tile>(Arrays.asList(wordTiles));
+		
+		String word = "";
+		Tile t = board.getTile(row, startCol);
+		word += t.getLetter();
+		if(!tiles.contains(t) || board.hasNorthNeighbor(row, startCol) || board.hasSouthNeighbor(row, startCol)){
+			return true;
+		}
+		
+		while(board.hasEastNeighbor(row, startCol++)){
+			t = board.getTile(row, startCol);
+			word += t.getLetter();
+			if(!tiles.contains(t) || board.hasNorthNeighbor(row, startCol) || board.hasSouthNeighbor(row, startCol)){
+				return true;
+			}
+		}
+
+		System.out.println("isHWordConnected: " + word);
+		System.out.println("Horizontal Word not connected to a cluster.");
+		return false;
+
+	}
+
+	
 
 }

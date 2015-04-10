@@ -1,31 +1,36 @@
 package com.d09e.scrabble;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 
 public class Score {
 
-	
-	public static int getScore(Board board, int dir, int row, int col) {
+
+	public static int getScore(Board board, int dir, int row, int col, Tile[] wordTiles) {
 		int score = 0;
 		if(dir == D.HORIZONTAL){
-			score = getHWordScore(board, row, col);
+			score = getHWordScore(board, row, col, wordTiles);
 		}else if(dir == D.VERTICAL){
-			score = getVWordScore(board, row, col);
+			score = getVWordScore(board, row, col, wordTiles);
 		}
 
 		return score;
 	}
 
-	private static int getHWordScore(Board board, int row, int col){
+	private static int getHWordScore(Board board, int row, int col, Tile[] wordTiles){
 		int score = 0;
 		// Go to the westmost position of vertical cluster
 		int startCol = col;
 		while(board.hasWestNeighbor(row, startCol)){
 			startCol--;
 		}
-		
-		score += getMainHWordScore(board, row, startCol);
 
-		if(board.hasNorthNeighbor(row, startCol) || board.hasSouthNeighbor(row, startCol)){
+		score += getMainHWordScore(board, row, startCol, wordTiles);
+
+		// TODO score adjacent words
+		
+		/*if(board.hasNorthNeighbor(row, startCol) || board.hasSouthNeighbor(row, startCol)){
 			score += getVCrossScore(board, row, startCol);
 		}
 
@@ -33,12 +38,12 @@ public class Score {
 			if(board.hasNorthNeighbor(row, startCol) || board.hasSouthNeighbor(row, startCol)){
 				score += getVCrossScore(board, row, startCol);
 			}
-		}
+		}*/
 
 		return score;
 	}
 
-	private static int getVWordScore(Board board, int row, int col){
+	private static int getVWordScore(Board board, int row, int col, Tile[] wordTiles){
 		int score = 0;
 
 		// Go to the northmost position of vertical cluster
@@ -46,10 +51,10 @@ public class Score {
 		while(board.hasNorthNeighbor(startRow, col)){
 			startRow--;
 		}
-		
-		score += getMainVWordScore(board, startRow, col);
 
-		if(board.hasEastNeighbor(startRow, col) || board.hasWestNeighbor(startRow, col)){
+		score += getMainVWordScore(board, startRow, col, wordTiles);
+
+		/*if(board.hasEastNeighbor(startRow, col) || board.hasWestNeighbor(startRow, col)){
 			score += getHCrossWordScore(board, startRow, col);
 		}
 
@@ -58,7 +63,7 @@ public class Score {
 			if(board.hasEastNeighbor(startRow, col) || board.hasWestNeighbor(startRow, col)){
 				score += getHCrossWordScore(board, startRow, col);
 			}
-		}
+		}*/
 
 		return score;
 	}
@@ -80,7 +85,7 @@ public class Score {
 		return score;
 
 	}
-	
+
 	private static int getHCrossWordScore(Board board, int row, int startCol){
 		// Go to the westmost position of horizontal cluster
 		while(board.hasWestNeighbor(row, startCol)){
@@ -98,8 +103,8 @@ public class Score {
 		return score;
 
 	}
-	
-	private static int getMainHWordScore(Board board, int row, int startCol){
+
+	private static int getMainHWordScore(Board board, int row, int startCol, Tile[] wordTiles){
 		// Go to the westmost position of horizontal cluster
 		while(board.hasWestNeighbor(row, startCol)){
 			startCol--;
@@ -108,22 +113,34 @@ public class Score {
 		int score = 0;
 		int wordMultiplier = 1;
 
-		score += board.getTile(row, startCol).getValue()
-				* board.getTileMultiplier(row, startCol);
-		wordMultiplier *= board.getWordMultiplier(row, startCol);
+		ArrayList<Tile> tiles = new ArrayList<Tile>(Arrays.asList(wordTiles));
+
+		Tile t = board.getTile(row, startCol);
+
+		if(tiles.contains(t)){
+			score += t.getValue() * board.getTileMultiplier(row, startCol);
+			wordMultiplier *= board.getWordMultiplier(row, startCol);
+		}else {
+			score += t.getValue();
+		}
 
 		while (board.hasEastNeighbor(row, startCol++)) {
-			score += board.getTile(row, startCol).getValue()
-					* board.getTileMultiplier(row, startCol);
-			
-			wordMultiplier *= board.getWordMultiplier(row, startCol);
+
+			t = board.getTile(row, startCol);
+
+			if(tiles.contains(t)){
+				score += t.getValue() * board.getTileMultiplier(row, startCol);
+				wordMultiplier *= board.getWordMultiplier(row, startCol);
+			}else {
+				score += t.getValue();
+			}
 		}
 
 		return score * wordMultiplier;
 
 	}
-	
-	private static int getMainVWordScore(Board board, int startRow, int col){
+
+	private static int getMainVWordScore(Board board, int startRow, int col, Tile[] wordTiles){
 		// Go to the westmost position of horizontal cluster
 		while(board.hasNorthNeighbor(startRow, col)){
 			startRow--;
@@ -132,15 +149,27 @@ public class Score {
 		int score = 0;
 		int wordMultiplier = 1;
 
-		score += board.getTile(startRow, col).getValue()
-				* board.getTileMultiplier(startRow, col);
-		wordMultiplier *= board.getWordMultiplier(startRow, col);
+		ArrayList<Tile> tiles = new ArrayList<Tile>(Arrays.asList(wordTiles));
 
-		while (board.hasSouthNeighbor(startRow, col++)) {
-			score += board.getTile(startRow, col).getValue()
-					* board.getTileMultiplier(startRow, col);
-			
+		Tile t = board.getTile(startRow, col);
+
+		if(tiles.contains(t)){
+			score += t.getValue() * board.getTileMultiplier(startRow, col);
 			wordMultiplier *= board.getWordMultiplier(startRow, col);
+		}else {
+			score += t.getValue();
+		}
+
+		while (board.hasSouthNeighbor(startRow++, col)) {
+
+			t = board.getTile(startRow, col);
+
+			if(tiles.contains(t)){
+				score += t.getValue() * board.getTileMultiplier(startRow, col);
+				wordMultiplier *= board.getWordMultiplier(startRow, col);
+			}else {
+				score += t.getValue();
+			}
 		}
 
 		return score * wordMultiplier;

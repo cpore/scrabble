@@ -55,10 +55,10 @@ public class Scrabble {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		GameState game = new GameState();
-		
+
 		System.out.println("WELCOME TO SCRABBLE(TM)!");
+		
+		new GameState();
 
 	}
 

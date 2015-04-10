@@ -23,8 +23,25 @@ public class GameState {
 		start();
 	}
 	
+	public Board getBoard(){
+		return board;
+	}
+	
+	public Bag getBag(){
+		return bag;
+	}
+	
 	public void printBoard(){
 		board.printBoard();
+	}
+	
+	public void printScores(){
+		StringBuilder scores = new StringBuilder();
+		for(Player p: players){
+			scores.append(p.getNamr() + ": " + p.getScore() + ", ");
+		}
+		System.out.println(scores.substring(0, scores.length()-2));
+;		
 	}
 	
 	private void start(){
@@ -44,7 +61,7 @@ public class GameState {
 	}
 	
 	private void getPlayerInput() {
-		currentPlayer.getMove(board, bag);
+		currentPlayer.getMove(GameState.this);
 		
 	}
 
