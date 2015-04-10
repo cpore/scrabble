@@ -133,21 +133,14 @@ public class D {
 			startCol--;
 		}
 		
-		
 		//check all the vertical words that cross this horizontal word
-		if(board.hasNorthNeighbor(row, startCol) || board.hasSouthNeighbor(row, startCol)){
-			if(!isVWordOk(board, row, startCol)){
-				return false;
-			}
-		}
-
-		while(board.hasSouthNeighbor(row, startCol++)){
+		do{
 			if(board.hasNorthNeighbor(row, startCol) || board.hasSouthNeighbor(row, startCol)){
 				if(!isVWordOk(board, row, startCol)){
 					return false;
 				}
 			}
-		}
+		}while(board.hasSouthNeighbor(row, startCol++));
 
 		return true;
 	}
@@ -167,19 +160,13 @@ public class D {
 
 		
 		//check all the horizontal words that cross this vertical word
-		if(board.hasEastNeighbor(startRow, col) || board.hasWestNeighbor(startRow, col)){
-			if(!isHWordOk(board, startRow, col)){
-				return false;
-			}
-		}
-
-		while(board.hasSouthNeighbor(startRow++, col)){
+		do{
 			if(board.hasEastNeighbor(startRow, col) || board.hasWestNeighbor(startRow, col)){
 				if(!isHWordOk(board, startRow, col)){
 					return false;
 				}
 			}
-		}
+		}while(board.hasSouthNeighbor(startRow++, col));
 
 		return true;
 	}
@@ -192,11 +179,9 @@ public class D {
 
 		String word = "";
 
-		word += board.getTile(startRow, col).getLetter();
-
-		while(board.hasSouthNeighbor(startRow++, col)){
+		do{
 			word += board.getTile(startRow, col).getLetter();
-		}
+		}while(board.hasSouthNeighbor(startRow++, col));
 
 		System.out.println(word);
 		return isValidWord(word);
@@ -211,11 +196,9 @@ public class D {
 
 		String word = "";
 
-		word += board.getTile(row, startCol).getLetter();
-
-		while(board.hasEastNeighbor(row, startCol++)){
+		do{
 			word += board.getTile(row, startCol).getLetter();
-		}
+		}while(board.hasEastNeighbor(row, startCol++));
 
 		System.out.println("isHWordOK: " + word);
 		return isValidWord(word);
@@ -229,17 +212,14 @@ public class D {
 			startRow--;
 		}
 		ArrayList<Tile> tiles = new ArrayList<Tile>(Arrays.asList(wordTiles));
-		Tile t = board.getTile(startRow, col);
-		if(!tiles.contains(t) || board.hasEastNeighbor(startRow, col) || board.hasWestNeighbor(startRow, col)){
-			return true;
-		}
-		
-		while(board.hasSouthNeighbor(startRow++, col)){
+		Tile t = null;
+	
+		do{
 			t = board.getTile(startRow, col);
 			if(!tiles.contains(t) || board.hasEastNeighbor(startRow, col) || board.hasWestNeighbor(startRow, col)){
 				return true;
 			}
-		}
+		}while(board.hasSouthNeighbor(startRow++, col));
 
 		System.out.println("Vertical Word not connected to a cluster.");
 		return false;
@@ -254,22 +234,15 @@ public class D {
 		}
 		ArrayList<Tile> tiles = new ArrayList<Tile>(Arrays.asList(wordTiles));
 		
-		String word = "";
-		Tile t = board.getTile(row, startCol);
-		word += t.getLetter();
-		if(!tiles.contains(t) || board.hasNorthNeighbor(row, startCol) || board.hasSouthNeighbor(row, startCol)){
-			return true;
-		}
+		Tile t = null;
 		
-		while(board.hasEastNeighbor(row, startCol++)){
+		do{
 			t = board.getTile(row, startCol);
-			word += t.getLetter();
 			if(!tiles.contains(t) || board.hasNorthNeighbor(row, startCol) || board.hasSouthNeighbor(row, startCol)){
 				return true;
 			}
-		}
+		}while(board.hasEastNeighbor(row, startCol++));
 
-		System.out.println("isHWordConnected: " + word);
 		System.out.println("Horizontal Word not connected to a cluster.");
 		return false;
 

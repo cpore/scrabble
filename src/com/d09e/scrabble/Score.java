@@ -28,17 +28,16 @@ public class Score {
 
 		score += getMainHWordScore(board, row, startCol, wordTiles);
 
-		// TODO score adjacent words
-		
-		/*if(board.hasNorthNeighbor(row, startCol) || board.hasSouthNeighbor(row, startCol)){
-			score += getVCrossScore(board, row, startCol);
-		}
+		ArrayList<Tile> tiles = new ArrayList<Tile>(Arrays.asList(wordTiles));
 
-		while(board.hasSouthNeighbor(row, startCol++)){
-			if(board.hasNorthNeighbor(row, startCol) || board.hasSouthNeighbor(row, startCol)){
+		Tile t = null;
+
+		do{
+			t = board.getTile(row, startCol);
+			if((board.hasNorthNeighbor(row, startCol) || board.hasSouthNeighbor(row, startCol)) && tiles.contains(t)){
 				score += getVCrossScore(board, row, startCol);
 			}
-		}*/
+		}while(board.hasEastNeighbor(row, startCol++));
 
 		return score;
 	}
@@ -54,16 +53,16 @@ public class Score {
 
 		score += getMainVWordScore(board, startRow, col, wordTiles);
 
-		/*if(board.hasEastNeighbor(startRow, col) || board.hasWestNeighbor(startRow, col)){
-			score += getHCrossWordScore(board, startRow, col);
-		}
+		ArrayList<Tile> tiles = new ArrayList<Tile>(Arrays.asList(wordTiles));
 
-		while(board.hasSouthNeighbor(startRow++, col)){
+		Tile t = null;
 
-			if(board.hasEastNeighbor(startRow, col) || board.hasWestNeighbor(startRow, col)){
+		do{
+			t = board.getTile(startRow, col);
+			if((board.hasEastNeighbor(startRow, col) || board.hasWestNeighbor(startRow, col)) && tiles.contains(t)){
 				score += getHCrossWordScore(board, startRow, col);
 			}
-		}*/
+		}while(board.hasSouthNeighbor(startRow++, col));
 
 		return score;
 	}
@@ -76,11 +75,9 @@ public class Score {
 
 		int score = 0;
 
-		score += board.getTile(startRow, col).getValue();
-
-		while(board.hasSouthNeighbor(startRow++, col)){
-			score += board.getTile(startRow, col).getValue();
-		}
+		do{
+			score += board.getTile(startRow, col).getValue() * board.getTileMultiplier(startRow, col);
+		}while(board.hasSouthNeighbor(startRow++, col));
 
 		return score;
 
@@ -94,11 +91,9 @@ public class Score {
 
 		int score = 0;
 
-		score += board.getTile(row, startCol).getValue();
-
-		while(board.hasEastNeighbor(row, startCol++)){
-			score += board.getTile(row, startCol).getValue();
-		}
+		do{
+			score += board.getTile(row, startCol).getValue() * board.getTileMultiplier(row, startCol);
+		}while(board.hasEastNeighbor(row, startCol++));
 
 		return score;
 
@@ -115,17 +110,9 @@ public class Score {
 
 		ArrayList<Tile> tiles = new ArrayList<Tile>(Arrays.asList(wordTiles));
 
-		Tile t = board.getTile(row, startCol);
+		Tile t = null;
 
-		if(tiles.contains(t)){
-			score += t.getValue() * board.getTileMultiplier(row, startCol);
-			wordMultiplier *= board.getWordMultiplier(row, startCol);
-		}else {
-			score += t.getValue();
-		}
-
-		while (board.hasEastNeighbor(row, startCol++)) {
-
+		do{
 			t = board.getTile(row, startCol);
 
 			if(tiles.contains(t)){
@@ -134,7 +121,7 @@ public class Score {
 			}else {
 				score += t.getValue();
 			}
-		}
+		}while(board.hasEastNeighbor(row, startCol++));
 
 		return score * wordMultiplier;
 
@@ -151,17 +138,9 @@ public class Score {
 
 		ArrayList<Tile> tiles = new ArrayList<Tile>(Arrays.asList(wordTiles));
 
-		Tile t = board.getTile(startRow, col);
+		Tile t = null;
 
-		if(tiles.contains(t)){
-			score += t.getValue() * board.getTileMultiplier(startRow, col);
-			wordMultiplier *= board.getWordMultiplier(startRow, col);
-		}else {
-			score += t.getValue();
-		}
-
-		while (board.hasSouthNeighbor(startRow++, col)) {
-
+		do{
 			t = board.getTile(startRow, col);
 
 			if(tiles.contains(t)){
@@ -170,7 +149,7 @@ public class Score {
 			}else {
 				score += t.getValue();
 			}
-		}
+		}while (board.hasSouthNeighbor(startRow++, col));
 
 		return score * wordMultiplier;
 
