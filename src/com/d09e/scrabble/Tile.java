@@ -1,6 +1,12 @@
 package com.d09e.scrabble;
 
-public class Tile {
+import org.json.JSONObject;
+
+public class Tile implements Jsonizable{
+	
+	public static final String ID = "id";
+	public static final String LETTER = "letter";
+	public static final String VALUE = "value";
 
 	public int id; // used to differentiate between tiles of same letter
 	private char letter;
@@ -12,6 +18,12 @@ public class Tile {
 		this.value = value;
 	}
 	
+	public Tile(JSONObject jsonObject) {
+		this.id = jsonObject.getInt(ID);
+		this.letter = jsonObject.getString(LETTER).charAt(0);
+		this.value = jsonObject.getInt(VALUE);
+	}
+
 	public Tile copy(){
 		return new Tile(id, letter, value);
 	}
@@ -49,6 +61,15 @@ public class Tile {
 		if (id != other.id)
 			return false;
 		return true;
+	}
+
+	@Override
+	public JSONObject toJson() {
+		JSONObject jo = new JSONObject();
+		jo.put(ID, id);
+		jo.put(LETTER, Character.toString(letter));
+		jo.put(VALUE, value);
+		return jo;
 	}
 
 	

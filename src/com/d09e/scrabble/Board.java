@@ -1,8 +1,14 @@
 package com.d09e.scrabble;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import com.d09e.scrabble.exception.InvalidPlacementException;
 
-public class Board {
+public class Board implements Jsonizable{
+
+	public static final String FIRST_MOVE = "firstMove";
+
 	public static final int ROWS = 15;
 	public static final int COLS = 15;
 	public boolean firstMove;
@@ -29,6 +35,32 @@ public class Board {
 		}
 	}
 
+	public Board(JSONObject jo) {
+		this.firstMove = jo.getBoolean(FIRST_MOVE);
+		//initialize squares
+		for(int i=0; i<ROWS; i++){
+			JSONArray row = jo.getJSONArray(String.valueOf(i));
+			for(int j=0; j<COLS; j++){
+				squares[i][j] = new Square(row.getJSONObject(j));
+			}
+		}
+	}
+
+	@Override
+	public JSONObject toJson() {
+		JSONObject jo = new JSONObject();
+		jo.put(FIRST_MOVE, firstMove);
+
+		for(int i=0; i<ROWS; i++){
+			JSONArray row = new JSONArray();
+			for(int j=0; j<COLS; j++){
+				row.put(squares[i][j].toJson());
+			}
+			jo.put(String.valueOf(i), row);
+		}
+		return jo;
+	}
+
 	public Board copy(){
 		return new Board(this);
 	}
@@ -45,11 +77,11 @@ public class Board {
 	public Tile getTile(int row, int col){
 		return squares[row][col].getTile();
 	}
-	
+
 	public int getTileMultiplier(int row, int col){
 		return squares[row][col].getTileMultiplier();
 	}
-	
+
 	public int getWordMultiplier(int row, int col){
 		return squares[row][col].getWordMultiplier();
 	}
@@ -104,7 +136,7 @@ public class Board {
 			System.out.println();
 			System.out
 			.println("   +----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+");
-			
+
 		}
 		System.out
 		.println(  "     0    1    2    3    4    5    6    7    8    9    10   11   12   13   14");
@@ -164,7 +196,16 @@ public class Board {
 	 * @author cpore
 	 *
 	 */
-	private static class Square {
+	private static class Square implements Jsonizable{
+		public static final String IS_DBL_LTR = "isDoubleLetter";
+		public static final String IS_DBL_WRD = "isDoubleWord";
+		public static final String IS_TPL_LTR = "isTripleLetter";
+		public static final String IS_TPL_WRD = "isTripleWord";
+		public static final String IS_STAR = "isStar";
+		public static final String TILE = "tile";
+		public static final String I = "i";
+		public static final String J = "j";
+
 		boolean isDoubleLetter = false;
 		boolean isDoubleWord = false;
 		boolean isTripleLetter = false;
@@ -197,27 +238,52 @@ public class Board {
 			this.j = j;
 		}
 
+		public Square(JSONObject jo){
+			isDoubleLetter = jo.getBoolean(IS_DBL_LTR);
+			isDoubleWord = jo.getBoolean(IS_DBL_WRD);
+			isTripleLetter = jo.getBoolean(IS_TPL_LTR);
+			isTripleWord = jo.getBoolean(IS_TPL_WRD);
+			isStar = jo.getBoolean(IS_STAR);
+			if(jo.has(TILE)) tile = new Tile(jo.getJSONObject(TILE));
+			i = jo.getInt(I);
+			j = jo.getInt(J);
+		}
+
+		@Override
+		public JSONObject toJson() {
+			JSONObject jo = new JSONObject();
+			jo.put(IS_DBL_LTR, isDoubleLetter);
+			jo.put(IS_DBL_WRD, isDoubleWord);
+			jo.put(IS_TPL_LTR, isTripleLetter);
+			jo.put(IS_TPL_WRD, isTripleWord);
+			jo.put(IS_STAR, isStar);
+			if(tile != null) jo.put(TILE, tile.toJson());
+			jo.put(I, i);
+			jo.put(J, j);
+			return jo;
+		}
+
 		public Tile getTile(){
 			return tile;
 		}
-		
+
 		public int getTileMultiplier(){
 			int multiplier = 1;
 			if(isDoubleLetter)
 				multiplier = 2;
 			else if(isTripleLetter)
 				multiplier = 3;
-			
+
 			return multiplier;
 		}
-		
+
 		public int getWordMultiplier(){
 			int multiplier = 1;
 			if(isDoubleWord || isStar)
 				multiplier = 2;
 			else if(isTripleWord)
 				multiplier = 3;
-			
+
 			return multiplier;
 		}
 
@@ -270,10 +336,8 @@ public class Board {
 		public String toString() {
 			return "Square [tile=" + tile + "]";
 		}
-
-
-
 	}
+
 }
 
 

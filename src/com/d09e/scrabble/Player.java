@@ -5,10 +5,18 @@ import java.util.InputMismatchException;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import com.d09e.scrabble.exception.InvalidPlacementException;
 import com.icantrap.collections.dawg.Dawg.Result;
 
-public class Player {
+public class Player implements Jsonizable{
+	
+	public static final String NAME = "name";
+	public static final String SCORE = "score";
+	public static final String RACK = "RACK";
+	public static final String IS_HUMAN = "isHuman";
 
 	private String name;
 	private int score;
@@ -21,6 +29,43 @@ public class Player {
 		this.name = name;
 		this.score = 0;
 		this.isHuman = isHuman;
+	}
+	
+	// copy ctor
+	public Player(String name, boolean isHuman, int score, ArrayList<Tile> rack){
+		this.name = name;
+		this.score = score;
+		this.isHuman = isHuman;
+		this.rack = rack;
+	}
+	
+	public Player(JSONObject jo){
+		this.name = jo.getString(NAME);
+		this.score = jo.getInt(SCORE);
+		this.rack = new ArrayList<Tile>();
+		JSONArray rackArray = jo.getJSONArray(RACK);
+		for(int i=0; i<rackArray.length(); i++){
+			this.rack.add(new Tile(rackArray.getJSONObject(i)));
+		}
+		this.isHuman = jo.getBoolean(IS_HUMAN);
+	}
+	
+	public Player copy(){
+		ArrayList<Tile> rackCopy = new ArrayList<Tile>();
+		for(Tile t: rack) rackCopy.add(t.copy());
+		return new Player(name, isHuman, score, rackCopy);
+	}
+
+	@Override
+	public JSONObject toJson() {
+		JSONObject jo = new JSONObject();
+		jo.put(NAME, name);
+		jo.put(SCORE, score);
+		JSONArray rackArray = new JSONArray();
+		for(Tile t: rack) rackArray.put(t.toJson());
+		jo.put(RACK, rackArray);
+		jo.put(IS_HUMAN, isHuman);
+		return jo;
 	}
 
 	public int getScore() {
@@ -113,8 +158,12 @@ public class Player {
 					System.out.println(r.word);
 				}
 				continue;
-			}else if(cmd.equalsIgnoreCase("s")){
+			}else if(cmd.equalsIgnoreCase("p")){
 				gameState.printScores();
+				continue;
+			}
+			else if(cmd.equalsIgnoreCase("s")){
+				gameState.saveGameState("savestates/savestate.state");
 				continue;
 			}
 
@@ -205,7 +254,4 @@ public class Player {
 		}
 		return rackString;
 	}
-
-
-
 }

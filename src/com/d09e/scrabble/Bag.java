@@ -4,7 +4,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
-public class Bag {
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+public class Bag implements Jsonizable{
+	public static String TAG = Bag.class.getName();
+	public static String TILE_ARRAY = "tileArray";
 	
 	private ArrayList<Tile> tiles;
 	
@@ -65,6 +70,14 @@ public class Bag {
 		Collections.shuffle(tiles);
 	}
 	
+	public Bag(JSONObject jo){
+		JSONArray tileArray = jo.getJSONArray(TILE_ARRAY);
+		this.tiles = new ArrayList<Tile>();
+		for (int i=0; i<tileArray.length(); i++) {
+		    this.tiles.add(new Tile(tileArray.getJSONObject(i)));
+		}
+	}
+	
 	public Bag(ArrayList<Tile> tiles){
 		this.tiles = tiles;
 	}
@@ -85,13 +98,14 @@ public class Bag {
 	public boolean isEmpty(){
 		return tiles.isEmpty();
 	}
-	
-	/**
-	 * Given a board (state) remove tiles from the bag that are already on the board.
-	 * @param board
-	 */
-	public void adjustBag(Board board){
-		
+
+	@Override
+	public JSONObject toJson() {
+		JSONObject jo = new JSONObject();
+		JSONArray tileArray = new JSONArray();
+		for(Tile t: tiles) tileArray.put(t.toJson());
+		jo.put(TILE_ARRAY, tileArray);
+		return jo;
 	}
 	
 }

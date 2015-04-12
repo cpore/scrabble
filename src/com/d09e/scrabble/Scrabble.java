@@ -58,7 +58,7 @@ public class Scrabble {
 
 		System.out.println("WELCOME TO SCRABBLE(TM)!");
 		
-		new GameState();
+		new GameState().start();
 
 	}
 
