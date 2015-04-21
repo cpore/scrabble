@@ -7,7 +7,11 @@ import java.util.Arrays;
 public class Score {
 
 
-	public static int getScore(Board board, int dir, int row, int col, Tile[] wordTiles) {
+	public static int getScore(Board board, Move move) {
+		int dir = move.getDir();
+		int row = move.getRow();
+		int col = move.getCol();
+		Tile[] wordTiles = move.getWordTiles();
 		int score = 0;
 		if(dir == D.HORIZONTAL){
 			score = getHWordScore(board, row, col, wordTiles);
@@ -15,6 +19,9 @@ public class Score {
 			score = getVWordScore(board, row, col, wordTiles);
 		}
 
+		// got a bingo
+		if(wordTiles.length == 7) score += 50;
+		
 		return score;
 	}
 

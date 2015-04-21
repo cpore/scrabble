@@ -2,17 +2,59 @@
   "currentPlayer": 0,
   "players": [
     {
-      "score": 8,
-      "RACK": [
+      "score": 0,
+      "rack": {"rackArray": [
+        {
+          "letter": "I",
+          "id": 25,
+          "value": 1
+        },
         {
           "letter": "Z",
           "id": 99,
           "value": 10
         },
         {
+          "letter": "T",
+          "id": 55,
+          "value": 1
+        },
+        {
+          "letter": "T",
+          "id": 40,
+          "value": 1
+        },
+        {
+          "letter": "E",
+          "id": 9,
+          "value": 1
+        },
+        {
+          "letter": "F",
+          "id": 80,
+          "value": 4
+        },
+        {
+          "letter": "S",
+          "id": 65,
+          "value": 1
+        }
+      ]},
+      "name": "Player 1",
+      "isHuman": true
+    },
+    {
+      "score": 0,
+      "rack": {"rackArray": [
+        {
           "letter": "?",
           "id": 85,
           "value": 0
+        },
+        {
+          "letter": "D",
+          "id": 67,
+          "value": 2
         },
         {
           "letter": "J",
@@ -20,142 +62,45 @@
           "value": 8
         },
         {
-          "letter": "N",
-          "id": 44,
-          "value": 1
-        },
-        {
-          "letter": "I",
-          "id": 17,
-          "value": 1
-        },
-        {
-          "letter": "H",
-          "id": 91,
+          "letter": "W",
+          "id": 83,
           "value": 4
         },
         {
-          "letter": "D",
-          "id": 59,
-          "value": 2
-        },
-        {
-          "letter": "R",
-          "id": 51,
-          "value": 1
-        }
-      ],
-      "name": "Player 1",
-      "isHuman": true
-    },
-    {
-      "score": 4,
-      "RACK": [
-        {
-          "letter": "O",
-          "id": 31,
+          "letter": "L",
+          "id": 68,
           "value": 1
         },
         {
-          "letter": "R",
-          "id": 48,
-          "value": 1
+          "letter": "F",
+          "id": 90,
+          "value": 4
         },
         {
           "letter": "A",
-          "id": 14,
-          "value": 1
-        },
-        {
-          "letter": "?",
-          "id": 75,
-          "value": 0
-        },
-        {
-          "letter": "A",
-          "id": 16,
-          "value": 1
-        },
-        {
-          "letter": "O",
-          "id": 35,
-          "value": 1
-        },
-        {
-          "letter": "E",
-          "id": 6,
+          "id": 12,
           "value": 1
         }
-      ],
+      ]},
       "name": "Player 2",
       "isHuman": true
     }
   ],
   "bag": {"tileArray": [
     {
-      "letter": "L",
-      "id": 60,
-      "value": 1
-    },
-    {
-      "letter": "U",
-      "id": 66,
-      "value": 1
-    },
-    {
-      "letter": "P",
-      "id": 79,
-      "value": 3
-    },
-    {
-      "letter": "T",
-      "id": 49,
-      "value": 1
-    },
-    {
-      "letter": "L",
-      "id": 64,
-      "value": 1
-    },
-    {
-      "letter": "G",
-      "id": 72,
-      "value": 2
-    },
-    {
-      "letter": "I",
-      "id": 15,
-      "value": 1
-    },
-    {
-      "letter": "D",
-      "id": 63,
-      "value": 2
-    },
-    {
-      "letter": "N",
-      "id": 41,
-      "value": 1
-    },
-    {
-      "letter": "V",
-      "id": 82,
+      "letter": "H",
+      "id": 81,
       "value": 4
     },
     {
-      "letter": "M",
-      "id": 78,
-      "value": 3
+      "letter": "D",
+      "id": 59,
+      "value": 2
     },
     {
-      "letter": "K",
-      "id": 95,
-      "value": 5
-    },
-    {
-      "letter": "O",
-      "id": 36,
-      "value": 1
+      "letter": "X",
+      "id": 97,
+      "value": 8
     },
     {
       "letter": "W",
@@ -163,198 +108,8 @@
       "value": 4
     },
     {
-      "letter": "P",
-      "id": 89,
-      "value": 3
-    },
-    {
-      "letter": "N",
-      "id": 50,
-      "value": 1
-    },
-    {
-      "letter": "T",
-      "id": 43,
-      "value": 1
-    },
-    {
-      "letter": "E",
-      "id": 4,
-      "value": 1
-    },
-    {
-      "letter": "I",
-      "id": 23,
-      "value": 1
-    },
-    {
-      "letter": "A",
-      "id": 26,
-      "value": 1
-    },
-    {
       "letter": "R",
-      "id": 42,
-      "value": 1
-    },
-    {
-      "letter": "Y",
-      "id": 84,
-      "value": 4
-    },
-    {
-      "letter": "A",
-      "id": 12,
-      "value": 1
-    },
-    {
-      "letter": "O",
-      "id": 30,
-      "value": 1
-    },
-    {
-      "letter": "I",
-      "id": 21,
-      "value": 1
-    },
-    {
-      "letter": "L",
-      "id": 68,
-      "value": 1
-    },
-    {
-      "letter": "O",
-      "id": 32,
-      "value": 1
-    },
-    {
-      "letter": "B",
-      "id": 76,
-      "value": 3
-    },
-    {
-      "letter": "T",
-      "id": 55,
-      "value": 1
-    },
-    {
-      "letter": "E",
-      "id": 10,
-      "value": 1
-    },
-    {
-      "letter": "R",
-      "id": 54,
-      "value": 1
-    },
-    {
-      "letter": "U",
-      "id": 62,
-      "value": 1
-    },
-    {
-      "letter": "E",
-      "id": 11,
-      "value": 1
-    },
-    {
-      "letter": "E",
-      "id": 9,
-      "value": 1
-    },
-    {
-      "letter": "E",
-      "id": 7,
-      "value": 1
-    },
-    {
-      "letter": "U",
-      "id": 58,
-      "value": 1
-    },
-    {
-      "letter": "T",
-      "id": 52,
-      "value": 1
-    },
-    {
-      "letter": "A",
-      "id": 28,
-      "value": 1
-    },
-    {
-      "letter": "G",
-      "id": 74,
-      "value": 2
-    },
-    {
-      "letter": "A",
-      "id": 20,
-      "value": 1
-    },
-    {
-      "letter": "V",
-      "id": 92,
-      "value": 4
-    },
-    {
-      "letter": "B",
-      "id": 86,
-      "value": 3
-    },
-    {
-      "letter": "U",
-      "id": 70,
-      "value": 1
-    },
-    {
-      "letter": "F",
-      "id": 80,
-      "value": 4
-    },
-    {
-      "letter": "O",
-      "id": 33,
-      "value": 1
-    },
-    {
-      "letter": "E",
-      "id": 1,
-      "value": 1
-    },
-    {
-      "letter": "N",
-      "id": 47,
-      "value": 1
-    },
-    {
-      "letter": "Y",
-      "id": 94,
-      "value": 4
-    },
-    {
-      "letter": "R",
-      "id": 39,
-      "value": 1
-    },
-    {
-      "letter": "I",
-      "id": 27,
-      "value": 1
-    },
-    {
-      "letter": "G",
-      "id": 73,
-      "value": 2
-    },
-    {
-      "letter": "M",
-      "id": 88,
-      "value": 3
-    },
-    {
-      "letter": "I",
-      "id": 19,
+      "id": 51,
       "value": 1
     },
     {
@@ -364,17 +119,92 @@
     },
     {
       "letter": "I",
+      "id": 27,
+      "value": 1
+    },
+    {
+      "letter": "K",
+      "id": 95,
+      "value": 5
+    },
+    {
+      "letter": "I",
       "id": 29,
       "value": 1
     },
     {
-      "letter": "N",
-      "id": 53,
+      "letter": "Q",
+      "id": 98,
+      "value": 10
+    },
+    {
+      "letter": "V",
+      "id": 82,
+      "value": 4
+    },
+    {
+      "letter": "E",
+      "id": 5,
       "value": 1
     },
     {
-      "letter": "O",
-      "id": 34,
+      "letter": "U",
+      "id": 62,
+      "value": 1
+    },
+    {
+      "letter": "I",
+      "id": 23,
+      "value": 1
+    },
+    {
+      "letter": "R",
+      "id": 54,
+      "value": 1
+    },
+    {
+      "letter": "R",
+      "id": 39,
+      "value": 1
+    },
+    {
+      "letter": "G",
+      "id": 73,
+      "value": 2
+    },
+    {
+      "letter": "E",
+      "id": 2,
+      "value": 1
+    },
+    {
+      "letter": "N",
+      "id": 38,
+      "value": 1
+    },
+    {
+      "letter": "I",
+      "id": 13,
+      "value": 1
+    },
+    {
+      "letter": "R",
+      "id": 42,
+      "value": 1
+    },
+    {
+      "letter": "U",
+      "id": 70,
+      "value": 1
+    },
+    {
+      "letter": "L",
+      "id": 60,
+      "value": 1
+    },
+    {
+      "letter": "U",
+      "id": 58,
       "value": 1
     },
     {
@@ -383,28 +213,203 @@
       "value": 1
     },
     {
-      "letter": "F",
-      "id": 90,
-      "value": 4
-    },
-    {
-      "letter": "X",
-      "id": 97,
-      "value": 8
-    },
-    {
-      "letter": "H",
-      "id": 81,
-      "value": 4
-    },
-    {
-      "letter": "T",
-      "id": 40,
+      "letter": "O",
+      "id": 36,
       "value": 1
     },
     {
       "letter": "E",
-      "id": 0,
+      "id": 1,
+      "value": 1
+    },
+    {
+      "letter": "?",
+      "id": 75,
+      "value": 0
+    },
+    {
+      "letter": "O",
+      "id": 30,
+      "value": 1
+    },
+    {
+      "letter": "I",
+      "id": 15,
+      "value": 1
+    },
+    {
+      "letter": "N",
+      "id": 47,
+      "value": 1
+    },
+    {
+      "letter": "P",
+      "id": 79,
+      "value": 3
+    },
+    {
+      "letter": "O",
+      "id": 35,
+      "value": 1
+    },
+    {
+      "letter": "A",
+      "id": 14,
+      "value": 1
+    },
+    {
+      "letter": "Y",
+      "id": 94,
+      "value": 4
+    },
+    {
+      "letter": "B",
+      "id": 76,
+      "value": 3
+    },
+    {
+      "letter": "B",
+      "id": 86,
+      "value": 3
+    },
+    {
+      "letter": "R",
+      "id": 48,
+      "value": 1
+    },
+    {
+      "letter": "I",
+      "id": 19,
+      "value": 1
+    },
+    {
+      "letter": "A",
+      "id": 26,
+      "value": 1
+    },
+    {
+      "letter": "I",
+      "id": 21,
+      "value": 1
+    },
+    {
+      "letter": "N",
+      "id": 44,
+      "value": 1
+    },
+    {
+      "letter": "E",
+      "id": 10,
+      "value": 1
+    },
+    {
+      "letter": "S",
+      "id": 69,
+      "value": 1
+    },
+    {
+      "letter": "H",
+      "id": 91,
+      "value": 4
+    },
+    {
+      "letter": "I",
+      "id": 17,
+      "value": 1
+    },
+    {
+      "letter": "T",
+      "id": 46,
+      "value": 1
+    },
+    {
+      "letter": "N",
+      "id": 41,
+      "value": 1
+    },
+    {
+      "letter": "E",
+      "id": 3,
+      "value": 1
+    },
+    {
+      "letter": "E",
+      "id": 11,
+      "value": 1
+    },
+    {
+      "letter": "N",
+      "id": 53,
+      "value": 1
+    },
+    {
+      "letter": "E",
+      "id": 7,
+      "value": 1
+    },
+    {
+      "letter": "Y",
+      "id": 84,
+      "value": 4
+    },
+    {
+      "letter": "G",
+      "id": 74,
+      "value": 2
+    },
+    {
+      "letter": "N",
+      "id": 50,
+      "value": 1
+    },
+    {
+      "letter": "R",
+      "id": 45,
+      "value": 1
+    },
+    {
+      "letter": "A",
+      "id": 28,
+      "value": 1
+    },
+    {
+      "letter": "T",
+      "id": 43,
+      "value": 1
+    },
+    {
+      "letter": "O",
+      "id": 33,
+      "value": 1
+    },
+    {
+      "letter": "A",
+      "id": 24,
+      "value": 1
+    },
+    {
+      "letter": "A",
+      "id": 18,
+      "value": 1
+    },
+    {
+      "letter": "D",
+      "id": 71,
+      "value": 2
+    },
+    {
+      "letter": "E",
+      "id": 6,
+      "value": 1
+    },
+    {
+      "letter": "T",
+      "id": 49,
+      "value": 1
+    },
+    {
+      "letter": "A",
+      "id": 20,
       "value": 1
     },
     {
@@ -413,19 +418,19 @@
       "value": 3
     },
     {
+      "letter": "P",
+      "id": 89,
+      "value": 3
+    },
+    {
+      "letter": "M",
+      "id": 88,
+      "value": 3
+    },
+    {
       "letter": "S",
       "id": 57,
       "value": 1
-    },
-    {
-      "letter": "W",
-      "id": 83,
-      "value": 4
-    },
-    {
-      "letter": "D",
-      "id": 67,
-      "value": 2
     },
     {
       "letter": "C",
@@ -438,33 +443,68 @@
       "value": 1
     },
     {
+      "letter": "M",
+      "id": 78,
+      "value": 3
+    },
+    {
+      "letter": "A",
+      "id": 22,
+      "value": 1
+    },
+    {
+      "letter": "U",
+      "id": 66,
+      "value": 1
+    },
+    {
       "letter": "E",
-      "id": 2,
+      "id": 0,
+      "value": 1
+    },
+    {
+      "letter": "T",
+      "id": 52,
       "value": 1
     },
     {
       "letter": "A",
-      "id": 24,
+      "id": 16,
       "value": 1
     },
     {
-      "letter": "I",
-      "id": 25,
+      "letter": "V",
+      "id": 92,
+      "value": 4
+    },
+    {
+      "letter": "L",
+      "id": 64,
       "value": 1
     },
     {
-      "letter": "N",
-      "id": 38,
+      "letter": "G",
+      "id": 72,
+      "value": 2
+    },
+    {
+      "letter": "D",
+      "id": 63,
+      "value": 2
+    },
+    {
+      "letter": "O",
+      "id": 34,
       "value": 1
     },
     {
-      "letter": "Q",
-      "id": 98,
-      "value": 10
+      "letter": "O",
+      "id": 31,
+      "value": 1
     },
     {
       "letter": "E",
-      "id": 3,
+      "id": 4,
       "value": 1
     },
     {
@@ -473,18 +513,8 @@
       "value": 1
     },
     {
-      "letter": "E",
-      "id": 5,
-      "value": 1
-    },
-    {
-      "letter": "I",
-      "id": 13,
-      "value": 1
-    },
-    {
-      "letter": "S",
-      "id": 69,
+      "letter": "O",
+      "id": 32,
       "value": 1
     }
   ]},
@@ -1037,7 +1067,7 @@
         "isDoubleLetter": false
       }
     ],
-    "firstMove": false,
+    "firstMove": true,
     "0": [
       {
         "isTripleLetter": false,
@@ -2066,11 +2096,6 @@
         "isDoubleWord": false,
         "isStar": true,
         "isTripleWord": false,
-        "tile": {
-          "letter": "R",
-          "id": 45,
-          "value": 1
-        },
         "i": 7,
         "j": 7,
         "isDoubleLetter": false
@@ -2080,11 +2105,6 @@
         "isDoubleWord": false,
         "isStar": false,
         "isTripleWord": false,
-        "tile": {
-          "letter": "A",
-          "id": 18,
-          "value": 1
-        },
         "i": 7,
         "j": 8,
         "isDoubleLetter": false
@@ -2094,11 +2114,6 @@
         "isDoubleWord": false,
         "isStar": false,
         "isTripleWord": false,
-        "tile": {
-          "letter": "S",
-          "id": 65,
-          "value": 1
-        },
         "i": 7,
         "j": 9,
         "isDoubleLetter": false
@@ -2108,11 +2123,6 @@
         "isDoubleWord": false,
         "isStar": false,
         "isTripleWord": false,
-        "tile": {
-          "letter": "T",
-          "id": 46,
-          "value": 1
-        },
         "i": 7,
         "j": 10,
         "isDoubleLetter": false
@@ -2223,11 +2233,6 @@
         "isDoubleWord": false,
         "isStar": false,
         "isTripleWord": false,
-        "tile": {
-          "letter": "A",
-          "id": 22,
-          "value": 1
-        },
         "i": 8,
         "j": 7,
         "isDoubleLetter": false
@@ -2365,11 +2370,6 @@
         "isDoubleWord": false,
         "isStar": false,
         "isTripleWord": false,
-        "tile": {
-          "letter": "D",
-          "id": 71,
-          "value": 2
-        },
         "i": 9,
         "j": 7,
         "isDoubleLetter": false

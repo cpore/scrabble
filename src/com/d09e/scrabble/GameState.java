@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -13,24 +14,26 @@ public class GameState implements Jsonizable{
 	public static final String BAG = "bag";
 	public static final String PLAYERS = "players";
 	public static final String CURRENT_PLAYER = "currentPlayer";
-	
+
 	private Bag bag;
 	private Board board;
-	
+
+	public static boolean gameOver = false;
+
 	private ArrayList<Player> players;
-	
+
 	private Player currentPlayer;
-	
+
 	public GameState(){
 		players = new ArrayList<Player>();
-		players.add(new Player("Player 1", true));
-		players.add(new Player("Player 2", true));
+		players.add(new Player("ROBOT Player 1", true));
+		players.add(new Player("ROBOT Player 2", true));
 		bag = new Bag();
 		board = new Board();
-		
+
 		playersDrawTiles();
 	}
-	
+
 	public GameState(JSONObject jo){
 		bag = new Bag(jo.getJSONObject(BAG));
 		board = new Board(jo.getJSONObject(BOARD));
@@ -41,53 +44,57 @@ public class GameState implements Jsonizable{
 		}
 		currentPlayer = players.get(jo.getInt(CURRENT_PLAYER));
 	}
-	
-	
+
+	public GameState(Bag bag, Board board, ArrayList<Player> players, Player currentPlayer){
+		this.bag = bag;
+		this.board = board;
+		this.players = players;
+		this.currentPlayer = currentPlayer;
+	}
+
+	public GameState copy(){
+		ArrayList<Player> playersCopy = new ArrayList<Player>();
+		for(Player p: players) playersCopy.add(p.copy());
+		return new GameState(bag.copy(), board.copy(), playersCopy, currentPlayer.copy());
+	}
+
+	public Player getCurrentPlayer(){
+		return currentPlayer;
+	}
+
 	public Board getBoard(){
 		return board;
 	}
-	
+
 	public Bag getBag(){
 		return bag;
 	}
-	
+
 	public void printBoard(){
 		board.printBoard();
 	}
-	
+
 	public void printScores(){
 		StringBuilder scores = new StringBuilder();
 		for(Player p: players){
-			scores.append(p.getNamr() + ": " + p.getScore() + ", ");
+			scores.append(p.getName() + ": " + p.getScore() + ", ");
 		}
 		System.out.println(scores.substring(0, scores.length()-2));
-;		
+		;		
 	}
-	
+
 	public void start(){
-		int i = 0;
 		while(!gameOver()){
-			currentPlayer = players.get(i);
-			
-			getPlayerInput();
-			
-			
-			if(i == players.size()-1){
-				i = 0;
-				continue;
+			Iterator<Player> itr = players.iterator();
+			while(itr.hasNext() && !gameOver()){
+				currentPlayer = itr.next();
+				currentPlayer.getMove(GameState.this);
 			}
-			i++;
 		}
-	}
-	
-	private void getPlayerInput() {
-		currentPlayer.getMove(GameState.this);
-		
 	}
 
 	private boolean gameOver() {
-		// TODO Auto-generated method stub
-		return false;
+		return gameOver;
 	}
 
 	/**
@@ -100,7 +107,7 @@ public class GameState implements Jsonizable{
 			}
 		}
 	}
-	
+
 	public void saveGameState(String saveFile){
 		File stateFile  = new File(saveFile);
 		try {
@@ -108,10 +115,9 @@ public class GameState implements Jsonizable{
 			fw.write(toJson().toString(2));
 			fw.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 	}
 
 	@Override
@@ -125,5 +131,5 @@ public class GameState implements Jsonizable{
 		jo.put(CURRENT_PLAYER, players.indexOf(currentPlayer));
 		return jo;
 	}
-	
+
 }

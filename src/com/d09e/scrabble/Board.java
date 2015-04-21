@@ -1,5 +1,8 @@
 package com.d09e.scrabble;
 
+import java.util.HashSet;
+import java.util.TreeSet;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -78,6 +81,10 @@ public class Board implements Jsonizable{
 		return squares[row][col].getTile();
 	}
 
+	public boolean isStar(int row, int col){
+		return squares[row][col].isStar;
+	}
+
 	public int getTileMultiplier(int row, int col){
 		return squares[row][col].getTileMultiplier();
 	}
@@ -86,23 +93,112 @@ public class Board implements Jsonizable{
 		return squares[row][col].getWordMultiplier();
 	}
 
-	public void placeWord(int dir, int i, int j, Tile[] wordTiles) throws InvalidPlacementException{
-		int tileIdx = 0;
+	public HashSet<Slot> getPossibleSlots(Rack rack){
+		HashSet<Slot> possibleSlots = new HashSet<Slot>();
+		for(int i=0; i<ROWS; i++){
+			for(int j=0; j<COLS; j++){
+				if(!squareIsUsed(i, j)) continue;
+
+				Slot hSlot = new Slot(D.HORIZONTAL, i, j, getTile(i, j));
+				Slot vSlot = new Slot(D.VERTICAL, i, j, getTile(i, j));
+
+				int rackCounter = 0;
+				int tileCounter = 0;
+				//get west path
+				while(rackCounter < rack.size() && inBoardBounds(i, j-rackCounter-tileCounter)){
+					if(hasWestNeighbor(i, j-rackCounter-tileCounter)){
+						while(hasWestNeighbor(i, j-rackCounter-tileCounter)){
+							tileCounter++;
+							hSlot.addNode(getTile(i, j-rackCounter-tileCounter), i, j-rackCounter-tileCounter);
+						}
+					}else{
+						rackCounter++;
+					}
+
+				}
+				// if there wasn't any room to add tiles from the rack don't set the start index
+				if(rackCounter > 0)	hSlot.setStart(j-rackCounter-tileCounter);
+				// get east path
+				rackCounter = 0;
+				tileCounter = 0;
+				while(rackCounter < rack.size() && inBoardBounds(i, j+rackCounter+tileCounter)){
+					if(hasEastNeighbor(i, j+rackCounter+tileCounter)){
+						while(hasEastNeighbor(i, j+rackCounter+tileCounter)){
+							tileCounter++;
+							hSlot.addNode(getTile(i, j+rackCounter+tileCounter), i, j+rackCounter+tileCounter);
+						}
+					}else{
+						rackCounter++;
+					}
+
+				}
+				if(rackCounter > 0) hSlot.setEnd(j+rackCounter+tileCounter);
+				
+				if(hSlot.hasPath()){
+					possibleSlots.add(hSlot);
+				}
+
+				rackCounter = 0;
+				tileCounter = 0;
+				//get north path
+				while(rackCounter < rack.size() && inBoardBounds(i-rackCounter-tileCounter, j)){
+					if(hasNorthNeighbor(i-rackCounter-tileCounter, j)){
+						while(hasNorthNeighbor(i-rackCounter-tileCounter, j)){
+							tileCounter++;
+							hSlot.addNode(getTile(i-rackCounter-tileCounter, j), i-rackCounter-tileCounter, j);
+						}
+					}else{
+						rackCounter++;
+					}
+
+				}
+				if(rackCounter > 0) vSlot.setStart(i-rackCounter-tileCounter);
+				
+				rackCounter = 0;
+				tileCounter = 0;
+				//get south path
+				while(rackCounter < rack.size() && inBoardBounds(i+rackCounter+tileCounter, j)){
+					if(hasSouthNeighbor(i+rackCounter+tileCounter, j)){
+						while(hasSouthNeighbor(i+rackCounter+tileCounter, j)){
+							tileCounter++;
+							hSlot.addNode(getTile(i+rackCounter+tileCounter, j), i+rackCounter+tileCounter, j);
+						}
+					}else{
+						rackCounter++;
+					}
+
+				}
+				if(rackCounter > 0) vSlot.setEnd(i+rackCounter+tileCounter);
+				
+				if(vSlot.hasPath()) possibleSlots.add(vSlot);
+			}
+		}
+		return possibleSlots;
+	}
+
+	public void placeWord(Move move) throws InvalidPlacementException{
+		int dir = move.getDir();
+		int i = move.getRow();
+		int j = move.getCol();
+		Tile[] wordTiles = move.getWordTiles();
+
 		if(dir == D.HORIZONTAL){
-			for(int col = j; tileIdx<wordTiles.length; col++){
+			int col = j;
+			for(Tile t: wordTiles){
 				//jump over used squares
 				while(squares[i][col].hasTile()){
 					col++;
 				}
-				squares[i][col].placeTile(wordTiles[tileIdx++]);
+				squares[i][col++].placeTile(t);
 			}
 		}else if(dir == D.VERTICAL){
-			for(int row = i; tileIdx<wordTiles.length; row++){
+			int row = i;
+			for(Tile t: wordTiles){
 				//jump over used squares
 				while(squares[row][j].hasTile()){
 					row++;
 				}
-				squares[row][j].placeTile(wordTiles[tileIdx++]);
+				squares[row++][j].placeTile(t);
 			}
 		}
 
@@ -173,22 +269,6 @@ public class Board implements Jsonizable{
 			return squares[row][col-1].getTile() != null;
 		}
 		return false;
-	}
-
-	public Square getNorthNeighbor(int row, int col){
-		return squares[row-1][col];
-	}
-
-	public Square getSouthNeighbor(int row, int col){
-		return squares[row+1][col];
-	}
-
-	public Square getEastNeighbor(int row, int col){
-		return squares[row][col+1];
-	}
-
-	public Square getWestNeighbor(int row, int col){
-		return squares[row][col-1];
 	}
 
 	/**
@@ -297,7 +377,7 @@ public class Board implements Jsonizable{
 		public boolean hasTile(){
 			if(tile == null) return false;
 
-			System.out.println("Square has tile: " + tile.getLetter());
+			//System.out.println("Square has tile: " + tile.getPlacedLetter());
 			return true;
 		}
 
@@ -326,15 +406,40 @@ public class Board implements Jsonizable{
 			if(tile == null) return "    ";
 
 			if(tile.getValue() == 10){
-				return " " + String.valueOf(tile.getLetter()) + String.valueOf(tile.getValue());
+				return " " + String.valueOf(tile.getPlacedLetter()) + String.valueOf(tile.getValue());
 			}
-			return " " + String.valueOf(tile.getLetter()) + String.valueOf(tile.getValue()) + " ";
+			return " " + String.valueOf(tile.getPlacedLetter()) + String.valueOf(tile.getValue()) + " ";
 
 		}
 
 		@Override
 		public String toString() {
 			return "Square [tile=" + tile + "]";
+		}
+
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + i;
+			result = prime * result + j;
+			return result;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			Square other = (Square) obj;
+			if (i != other.i)
+				return false;
+			if (j != other.j)
+				return false;
+			return true;
 		}
 	}
 

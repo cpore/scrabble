@@ -1,11 +1,9 @@
 package com.d09e.scrabble;
 
-import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.d09e.scrabble.exception.InvalidPlacementException;
@@ -15,13 +13,13 @@ public class Player implements Jsonizable{
 	
 	public static final String NAME = "name";
 	public static final String SCORE = "score";
-	public static final String RACK = "RACK";
+	public static final String RACK = "rack";
 	public static final String IS_HUMAN = "isHuman";
 
 	private String name;
 	private int score;
 
-	private ArrayList<Tile> rack = new ArrayList<Tile>();
+	private Rack rack;
 
 	private boolean isHuman;
 
@@ -29,10 +27,11 @@ public class Player implements Jsonizable{
 		this.name = name;
 		this.score = 0;
 		this.isHuman = isHuman;
+		this.rack = new Rack();
 	}
 	
 	// copy ctor
-	public Player(String name, boolean isHuman, int score, ArrayList<Tile> rack){
+	public Player(String name, boolean isHuman, int score, Rack rack){
 		this.name = name;
 		this.score = score;
 		this.isHuman = isHuman;
@@ -42,18 +41,12 @@ public class Player implements Jsonizable{
 	public Player(JSONObject jo){
 		this.name = jo.getString(NAME);
 		this.score = jo.getInt(SCORE);
-		this.rack = new ArrayList<Tile>();
-		JSONArray rackArray = jo.getJSONArray(RACK);
-		for(int i=0; i<rackArray.length(); i++){
-			this.rack.add(new Tile(rackArray.getJSONObject(i)));
-		}
+		this.rack = new Rack(jo.getJSONObject(RACK));
 		this.isHuman = jo.getBoolean(IS_HUMAN);
 	}
 	
 	public Player copy(){
-		ArrayList<Tile> rackCopy = new ArrayList<Tile>();
-		for(Tile t: rack) rackCopy.add(t.copy());
-		return new Player(name, isHuman, score, rackCopy);
+		return new Player(name, isHuman, score, rack.copy());
 	}
 
 	@Override
@@ -61,9 +54,7 @@ public class Player implements Jsonizable{
 		JSONObject jo = new JSONObject();
 		jo.put(NAME, name);
 		jo.put(SCORE, score);
-		JSONArray rackArray = new JSONArray();
-		for(Tile t: rack) rackArray.put(t.toJson());
-		jo.put(RACK, rackArray);
+		jo.put(RACK, rack.toJson());
 		jo.put(IS_HUMAN, isHuman);
 		return jo;
 	}
@@ -72,8 +63,12 @@ public class Player implements Jsonizable{
 		return score;
 	}
 
-	public String getNamr() {
+	public String getName() {
 		return name;
+	}
+	
+	public Rack getRack() {
+		return rack;
 	}
 
 	public void setScore(int delta) {
@@ -87,24 +82,6 @@ public class Player implements Jsonizable{
 		rack.add(bag.drawTile());
 	}
 
-	public void addTile(Tile tile) {
-		if(rack.size() > 7){
-			throw new IndexOutOfBoundsException();
-		}
-		rack.add(tile);
-	}
-
-	public ArrayList<Tile> getRack(){
-		return rack;
-	}
-
-	public void printRack() {
-		System.out.print("Rack: ");
-		for (Tile tile: rack) {
-			System.out.print(tile.getLetter() + " ");
-		}
-		System.out.println();
-	}
 
 	public int getNumberOfLetters() {
 		return rack.size();
@@ -118,14 +95,35 @@ public class Player implements Jsonizable{
 		if(isHuman){
 			promptForWord(gameState);
 		}else{
-			findBestWord(gameState);
+			makeMove(gameState);
 		}
 
 	}
+	
+	private void makeMove(GameState gameState){
+		Move move = findBestMove(gameState.copy());
+		if(move == null){
+			System.out.println("NO VALID MOVE!!!!!");
+			return;
+		}
+		//should already be valid move based on search
+		//but just in case...
+		if(D.isValidMove(gameState.getBoard(), move)){
 
-	private String findBestWord(GameState gameState) {
-		// TODO
-		return "";
+			try {
+				placeWord(gameState.getBoard(), gameState.getBag(), move);
+			} catch (InvalidPlacementException e) {
+				e.printStackTrace();
+			}
+		}else{
+			System.out.println("Searched Move not OK");
+		}
+		
+	}
+
+	private Move findBestMove(GameState gameState) {
+		Move move = Search.findBestMove(gameState);
+		return move;
 
 	}
 
@@ -135,10 +133,10 @@ public class Player implements Jsonizable{
 		boolean moveOk = false;
 		while(!moveOk){
 			System.out.print(name + ": " + score + " ");
-			printRack();
-			System.out.println("enter h or v and start square and letters to play(in order)\nor c for hints\nor s for scores\nor press enter to print board:  ");
-			String move = scanner.nextLine();
-			Scanner lineScanner = new Scanner(move);
+			rack.printRack();
+			System.out.println("enter h or v and start square and letters to play(in order)\nor c for hints\nor p for scores\nor press enter to print board:  ");
+			String playedMove = scanner.nextLine();
+			Scanner lineScanner = new Scanner(playedMove);
 			String cmd = null;
 
 			try{
@@ -154,17 +152,20 @@ public class Player implements Jsonizable{
 			}else if(cmd.equalsIgnoreCase("v")){
 				dir = D.VERTICAL;
 			}else if(cmd.equalsIgnoreCase("c")){
-				for(Result r: D.getSubwords(getRackString())){
+				for(Result r: rack.getPossibleWords("")){
 					System.out.println(r.word);
 				}
 				continue;
 			}else if(cmd.equalsIgnoreCase("p")){
 				gameState.printScores();
 				continue;
-			}
-			else if(cmd.equalsIgnoreCase("s")){
+			}else if(cmd.equalsIgnoreCase("s")){
 				gameState.saveGameState("savestates/savestate.state");
 				continue;
+			}else if(cmd.equalsIgnoreCase("f")){
+				makeMove(gameState);
+				lineScanner.close();
+				return;
 			}
 
 			int row;
@@ -187,14 +188,13 @@ public class Player implements Jsonizable{
 			System.out.println(String.valueOf(row) + " " + String.valueOf(col) + " " + word);
 
 			Board board = gameState.getBoard();
-			Tile[] playedTiles = getWordTiles(word);
-			if(D.isValidMove(board, dir, row, col, word, playedTiles)){
+			Move move = new Move(dir, row, col, rack.getWordTiles(word));
+			
+			if(D.isValidMove(board, move)){
 
 				try {
-					placeWord(board, gameState.getBag(), dir, row, col, playedTiles);
-					score += Score.getScore(board, dir, row, col, playedTiles);
+					placeWord(board, gameState.getBag(), move);
 				} catch (InvalidPlacementException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 					continue;
 				}
@@ -208,50 +208,16 @@ public class Player implements Jsonizable{
 		//scanner.close();
 	}
 	
-	private void placeWord(Board board, Bag bag, int dir, int row, int col, Tile[] wordTiles) throws InvalidPlacementException{
-		board.placeWord(dir, row, col, wordTiles);
+	private void placeWord(Board board, Bag bag, Move move) throws InvalidPlacementException{
+		board.placeWord(move);
 		
+		score += move.getScore(board);
+		
+		Tile[] wordTiles = move.getWordTiles();
 		for(int i=0; i<wordTiles.length; i++){
 			rack.remove(wordTiles[i]);
 			if(!bag.isEmpty()) rack.add(bag.drawTile());
 		}
 	}
 
-	private Tile[] getWordTiles(String word){
-		Tile[] tiles = new Tile[word.length()];
-		int tileidx = 0;
-		for(char c: word.toCharArray()){
-			for(Tile t: rack){
-				if(t.getLetter() == c){
-					tiles[tileidx++] = t;
-					break;
-				}
-			}
-		}
-		return tiles;
-	}
-
-	public boolean rackContains(String word){
-		for(char c: word.toCharArray()){
-			if(!rackContains(c)) return false;
-		}
-		return true;
-	}
-
-	private boolean rackContains(char c){
-		for(Tile t: rack){
-			if(t.getLetter() == c){
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	public String getRackString(){
-		String rackString = "";
-		for(Tile t: rack){
-			rackString += t.getLetter();
-		}
-		return rackString;
-	}
 }

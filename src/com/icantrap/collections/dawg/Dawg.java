@@ -560,16 +560,24 @@ public class Dawg {
 
 	public class Result {
 		public final String word;
+		public final String wordWithWildcards;
 		public int[] wildcardPositions = null;
 
 		private Result(String word, List<Integer> wildcardPositions) {
 			this.word = word;
 
+			
 			if (null != wildcardPositions) {
+				StringBuilder tempword = new StringBuilder(word);
 				int size = wildcardPositions.size();
 				this.wildcardPositions = new int[size];
-				for (int i = 0; i < size; ++i)
+				for (int i = 0; i < size; ++i){
 					this.wildcardPositions[i] = wildcardPositions.get(i);
+					tempword.setCharAt(this.wildcardPositions[i], '?');
+				}
+				wordWithWildcards = tempword.toString();
+			}else{
+				wordWithWildcards = word;
 			}
 		}
 

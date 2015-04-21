@@ -4,34 +4,38 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import com.d09e.scrabble.exception.InvalidPlacementException;
-import com.icantrap.collections.dawg.Dawg.Result;
 
 public class D {
 
 	//TODO deal with bad rack, swap?
-	
+
 	public static final int HORIZONTAL = 0;
 	public static final int VERTICAL = 1;
 
 	private D(){ }
 
-	public static boolean isValidWord(String word){
 
-		if(word.contains("?")){
-			String pattern = word.replace("?", ".");
-			for(Result r: Scrabble.dawg.subwords(word, word)){
-				if(r.word.matches(pattern)){
-					//System.out.println(r.word);
-					return true;
-				}
-			}
+
+	public static boolean isValidMove(Board board, Move move){
+
+		if(!isFirstMoveOK(board, move)){
+			System.out.println("First play must be on star.");
 			return false;
 		}
-		return Scrabble.dawg.contains(word);
-	}
 
-	public static Result[] getSubwords(String rack){
-		return Scrabble.dawg.subwords(rack, "");
+		if(!wordInBoardBounds(board, move)){
+			System.out.println(move.getTileString() + ": Word not in bounds.");
+			return false;
+		}
+
+		if(!placementOk(board, move)){
+			System.out.println("Placement is invalid");
+			return false;
+		}
+
+		board.firstMove = false;
+
+		return true;
 	}
 
 	/**
@@ -43,72 +47,71 @@ public class D {
 	 * @param word
 	 * @return
 	 */
-	private static boolean wordInBoardBounds(Board board, int dir, int row, int col, String word){
+	private static boolean wordInBoardBounds(Board board, Move move){
+		int dir = move.getDir();
+		int row = move.getRow();
+		int col = move.getCol();
+		int len = move.getWordTiles().length;
+
+		int sq = 0;
+		
 		if(dir == HORIZONTAL){
-			for(int i=col; i<(word.length() + col); i++){
-				if(i<0 || i>=Board.COLS) return false;
+			for(int i=col; i<(col+len); i++){
+				if(i<0 || i+sq>=Board.COLS) return false;
 				//jump over used squares
-				while(board.squareIsUsed(row, i)) i++;
+				while(board.squareIsUsed(row, i+sq)){ 
+					sq++;
+					if(i<0 || i+sq>=Board.COLS) return false;
+				}
 			}
 		}else if(dir == VERTICAL){
-			for(int j=row; j<(word.length() + row); j++){
-				if(j<0 || j>=Board.ROWS) return false;
+			for(int j=row; j<(row+len); j++){
+				if(j<0 || j+sq>=Board.ROWS) return false;
 				//jump over used squares
-				while(board.squareIsUsed(j, col)) j++;
+				while(board.squareIsUsed(j+sq, col)){
+					sq++; 
+					if(j<0 || j+sq>=Board.ROWS) return false;
+				}
 			}
 		}
 
 		return true;
 	}
 
-	public static boolean isValidMove(Board board, int dir, int row, int col, String word,
-			Tile[] wordTiles){
-
-		if(!isFirstMoveOK(board, dir, row, col, word.length())){
-			System.out.println("First play must be on star.");
-			return false;
-		}
-		
-		if(!wordInBoardBounds(board, dir, row, col, word)){
-			System.out.println("Word not in bounds or square already used.");
-			return false;
-		}
-
-		if(!placementOk(board, dir, row, col, wordTiles)){
-			System.out.println("Placement is invalid");
-			return false;
-		}
-
-		board.firstMove = false;
-		
-		return true;
-	}
-	
-	private static boolean isFirstMoveOK(Board board, int dir, int row, int col, int len){
+	private static boolean isFirstMoveOK(Board board, Move move){
 		if(!board.firstMove) return true;
-		
+
+		int dir = move.getDir();
+		int row = move.getRow();
+		int col = move.getCol();
+		int len = move.getWordTiles().length;
+
 		if(dir == HORIZONTAL){
-			return (row == 7 && col+len >= 7);
+			return row == 7 && col <= 7 && col+len-1 >= 7;
 		}else if(dir == VERTICAL){
-			return (col == 7 && row+len >= 7);
+			return col == 7 && row <= 7 && row+len-1 >= 7;
 		}
-		
+
 		return false;
-		
+
 	}
 
-	private static boolean placementOk(Board board, int dir, int row, int col,
-			Tile[] wordTiles) {
+	private static boolean placementOk(Board board, Move move) {
 		Board tempBoard = board.copy();
 
+		int dir = move.getDir();
+		int row = move.getRow();
+		int col = move.getCol();
+		Tile[] wordTiles = move.getWordTiles();
+
+
 		try {
-			tempBoard.placeWord(dir, row, col, wordTiles);
+			tempBoard.placeWord(move);
 		} catch (InvalidPlacementException e) {
-			// TODO Auto-generated catch block
 			System.out.println("Word out of bounds");
 			return false;
 		}
-		
+
 		if(dir == HORIZONTAL){
 			return isHWordConnected(tempBoard, row, col, wordTiles)
 					&& hPlacementOk(tempBoard, row, col);
@@ -132,7 +135,7 @@ public class D {
 		while(board.hasWestNeighbor(row, startCol)){
 			startCol--;
 		}
-		
+
 		//check all the vertical words that cross this horizontal word
 		do{
 			if(board.hasNorthNeighbor(row, startCol) || board.hasSouthNeighbor(row, startCol)){
@@ -140,7 +143,7 @@ public class D {
 					return false;
 				}
 			}
-		}while(board.hasSouthNeighbor(row, startCol++));
+		}while(board.hasEastNeighbor(row, startCol++));
 
 		return true;
 	}
@@ -158,7 +161,7 @@ public class D {
 			startRow--;
 		}
 
-		
+
 		//check all the horizontal words that cross this vertical word
 		do{
 			if(board.hasEastNeighbor(startRow, col) || board.hasWestNeighbor(startRow, col)){
@@ -180,14 +183,14 @@ public class D {
 		String word = "";
 
 		do{
-			word += board.getTile(startRow, col).getLetter();
+			word += board.getTile(startRow, col).getPlacedLetter();
 		}while(board.hasSouthNeighbor(startRow++, col));
 
-		System.out.println(word);
-		return isValidWord(word);
+		System.out.println("isVWordOk: " + word);
+		return Scrabble.isValidWord(word);
 
 	}
-	
+
 	private static boolean isHWordOk(Board board, int row, int startCol){
 		// Go to the westmost position of horizontal cluster
 		while(board.hasWestNeighbor(row, startCol)){
@@ -197,11 +200,11 @@ public class D {
 		String word = "";
 
 		do{
-			word += board.getTile(row, startCol).getLetter();
+			word += board.getTile(row, startCol).getPlacedLetter();
 		}while(board.hasEastNeighbor(row, startCol++));
 
 		System.out.println("isHWordOK: " + word);
-		return isValidWord(word);
+		return Scrabble.isValidWord(word);
 
 	}
 
@@ -213,7 +216,7 @@ public class D {
 		}
 		ArrayList<Tile> tiles = new ArrayList<Tile>(Arrays.asList(wordTiles));
 		Tile t = null;
-	
+
 		do{
 			t = board.getTile(startRow, col);
 			if(!tiles.contains(t) || board.hasEastNeighbor(startRow, col) || board.hasWestNeighbor(startRow, col)){
@@ -225,17 +228,19 @@ public class D {
 		return false;
 
 	}
-	
+
 	private static boolean isHWordConnected(Board board, int row, int startCol, Tile[] wordTiles){
-		if(board.firstMove) return true;
+		if(board.firstMove){
+			return true;
+		}
 		// Go to the westmost position of vertical cluster
 		while(board.hasWestNeighbor(row, startCol)){
 			startCol--;
 		}
 		ArrayList<Tile> tiles = new ArrayList<Tile>(Arrays.asList(wordTiles));
-		
+
 		Tile t = null;
-		
+
 		do{
 			t = board.getTile(row, startCol);
 			if(!tiles.contains(t) || board.hasNorthNeighbor(row, startCol) || board.hasSouthNeighbor(row, startCol)){
@@ -248,6 +253,5 @@ public class D {
 
 	}
 
-	
 
 }
