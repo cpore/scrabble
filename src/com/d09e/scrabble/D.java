@@ -33,8 +33,6 @@ public class D {
 			return false;
 		}
 
-		board.firstMove = false;
-
 		return true;
 	}
 
@@ -106,7 +104,7 @@ public class D {
 
 
 		try {
-			tempBoard.placeWord(move);
+			tempBoard.placeWord(move, false);
 		} catch (InvalidPlacementException e) {
 			System.out.println("Word out of bounds");
 			return false;
@@ -183,6 +181,7 @@ public class D {
 		String word = "";
 
 		do{
+			//TODO getLetter or getPlacedLetter ?
 			word += board.getTile(startRow, col).getPlacedLetter();
 		}while(board.hasSouthNeighbor(startRow++, col));
 
@@ -200,6 +199,7 @@ public class D {
 		String word = "";
 
 		do{
+			//TODO getLetter or getPlacedLetter ?
 			word += board.getTile(row, startCol).getPlacedLetter();
 		}while(board.hasEastNeighbor(row, startCol++));
 

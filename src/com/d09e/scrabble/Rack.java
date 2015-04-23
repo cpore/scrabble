@@ -33,15 +33,12 @@ public class Rack implements Jsonizable{
 		return new Rack(rackCopy);
 	}
 
-	public void add(Tile tile){
-		rack.add(tile);
-	}
-
 	public int size(){
 		return rack.size();
 	}
 
 	public void addTile(Tile tile) {
+		System.out.println("ADDING TILE: " + tile.toString());
 		if(rack.size() > 7){
 			throw new IndexOutOfBoundsException();
 		}
@@ -73,29 +70,41 @@ public class Rack implements Jsonizable{
 		return rack.remove(tile);
 	}
 
+	// XXX this may get tiles that aren't from rack!!!!!!!!!!!!!!!!!!!!!!!
+	// OK
 	public Tile[] getWordTiles(String word){
 		Tile[] tiles = new Tile[word.length()];
-		int tileidx = 0;
-		for(char c: word.toCharArray()){
-			for(Tile t: rack){
+		int tileIdx = 0;
+		int rackIdx = 0;
+
+		for(Tile t: rack){
+			for(char c: word.toCharArray()){
 				if(t.getLetter() == c){
-					tiles[tileidx++] = t;
+					rackIdx++;
+					tiles[tileIdx++] = t;
+					if(tileIdx == tiles.length) return tiles;
 					break;
 				}
 			}
+			
 		}
+
 		return tiles;
 	}
-	
+
 	public Tile[] getWordTiles(String wordWithWC, String word){
 		Tile[] tiles = new Tile[wordWithWC.length()];
-		int tileidx = 0;
+		int tileIdx = 0;
+		int rackIdx = 0;
 		char[] wordArray = wordWithWC.toCharArray();
-		for( int i=0; i<wordArray.length; i++ ){
-			for(Tile t: rack){
+
+		for(Tile t: rack){
+			for(int i=0; i<wordArray.length; i++ ){
 				if(t.getLetter() == wordArray[i]){
-					if(wordArray[i] == '?') t.setBlankLetter(word.charAt(i));
-					tiles[tileidx++] = t;
+					if(wordArray[i] == '?') t.setPlacedLetter(word.charAt(i));
+					rackIdx++;
+					tiles[tileIdx++] = t;
+					if(tileIdx == tiles.length) return tiles;
 					break;
 				}
 			}
@@ -103,7 +112,19 @@ public class Rack implements Jsonizable{
 		return tiles;
 	}
 
-	public boolean rackContains(String word){
+	public void setPlacedTiles(String wordWithWC, String word){
+		char[] wordArray = wordWithWC.toCharArray();
+		for( int i=0; i<wordArray.length; i++ ){
+			for(Tile t: rack){
+				if(t.getLetter() == wordArray[i]){
+					if(wordArray[i] == '?') t.setPlacedLetter(word.charAt(i));
+					break;
+				}
+			}
+		}
+	}
+
+	/*	public boolean rackContains(String word){
 		for(char c: word.toCharArray()){
 			if(!rackContains(c)) return false;
 		}
@@ -117,7 +138,7 @@ public class Rack implements Jsonizable{
 			}
 		}
 		return false;
-	}
+	}*/
 
 	public String getRackString(){
 		String rackString = "";
@@ -133,5 +154,9 @@ public class Rack implements Jsonizable{
 			searchString += extras;
 		}
 		return Scrabble.getSubwords(searchString);
+	}
+
+	public boolean isEmpty() {
+		return rack.isEmpty();
 	}
 }

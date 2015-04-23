@@ -11,7 +11,7 @@ public class Tile implements Jsonizable{
 
 	public int id; // used to differentiate between tiles of same letter
 	private char letter;
-	private char blankLetter = '?';
+	private char placedLetter = '?';
 	private int value;
 	
 	public Tile(int id, char letter, int value){
@@ -23,23 +23,23 @@ public class Tile implements Jsonizable{
 	public Tile(int id, char letter, char blankLetter, int value){
 		this.id = id;
 		this.letter = letter;
-		this.blankLetter = blankLetter;
+		this.placedLetter = blankLetter;
 		this.value = value;
 	}
 	
 	public Tile(JSONObject jsonObject) {
 		this.id = jsonObject.getInt(ID);
 		this.letter = jsonObject.getString(LETTER).charAt(0);
-		this.blankLetter = jsonObject.getString(BLANK_LETTER).charAt(0);
+		this.placedLetter = jsonObject.getString(BLANK_LETTER).charAt(0);
 		this.value = jsonObject.getInt(VALUE);
 	}
 
 	public Tile copy(){
-		return new Tile(id, letter, blankLetter, value);
+		return new Tile(id, letter, placedLetter, value);
 	}
 	
 	public char getPlacedLetter() {
-		if(letter == '?') return blankLetter;
+		if(letter == '?') return placedLetter;
 		return letter;
 	}
 	
@@ -47,9 +47,9 @@ public class Tile implements Jsonizable{
 		return letter;
 	}
 	
-	public void setBlankLetter(char letter){
+	public void setPlacedLetter(char letter){
 		if(this.letter != '?') return;
-		this.blankLetter = letter;
+		this.placedLetter = letter;
 	}
 
 	public int getValue() {
@@ -58,7 +58,7 @@ public class Tile implements Jsonizable{
 
 	@Override
 	public String toString() {
-		return "Tile [letter=" + letter + ", value=" + value + "]";
+		return "Tile [id=" + id + ", letter=" + letter + ", placedLetter=" + placedLetter + ", value=" + value + "]";
 	}
 
 	@Override
@@ -88,7 +88,7 @@ public class Tile implements Jsonizable{
 		JSONObject jo = new JSONObject();
 		jo.put(ID, id);
 		jo.put(LETTER, Character.toString(letter));
-		jo.put(BLANK_LETTER, Character.toString(blankLetter));
+		jo.put(BLANK_LETTER, Character.toString(placedLetter));
 		jo.put(VALUE, value);
 		return jo;
 	}

@@ -79,7 +79,7 @@ public class Player implements Jsonizable{
 		if(rack.size() > 7){
 			throw new IndexOutOfBoundsException();
 		}
-		rack.add(bag.drawTile());
+		rack.addTile(bag.drawTile());
 	}
 
 
@@ -101,14 +101,18 @@ public class Player implements Jsonizable{
 	}
 	
 	private void makeMove(GameState gameState){
-		Move move = findBestMove(gameState.copy());
+		Move move = Search.findBestMove(gameState);
 		if(move == null){
 			System.out.println("NO VALID MOVE!!!!!");
+			gameState.printRacks();
+			gameState.printScores();
+			gameState.printBoard();
+			new Scanner(System.in).next();
 			return;
 		}
 		//should already be valid move based on search
 		//but just in case...
-		if(D.isValidMove(gameState.getBoard(), move)){
+		if(D.isValidMove(gameState.getBoard().copy(), move)){
 
 			try {
 				placeWord(gameState.getBoard(), gameState.getBag(), move);
@@ -117,14 +121,10 @@ public class Player implements Jsonizable{
 			}
 		}else{
 			System.out.println("Searched Move not OK");
+			//TODO handle passing
+			promptForWord(gameState);
 		}
 		
-	}
-
-	private Move findBestMove(GameState gameState) {
-		Move move = Search.findBestMove(gameState);
-		return move;
-
 	}
 
 	private void promptForWord(GameState gameState) {
@@ -142,6 +142,7 @@ public class Player implements Jsonizable{
 			try{
 				cmd = lineScanner.next();
 			}catch(NoSuchElementException nsee){
+				gameState.printRacks();
 				gameState.printScores();
 				gameState.printBoard();
 				continue;
@@ -160,7 +161,7 @@ public class Player implements Jsonizable{
 				gameState.printScores();
 				continue;
 			}else if(cmd.equalsIgnoreCase("s")){
-				gameState.saveGameState("savestates/savestate.state");
+				gameState.saveGameState("savestates/savestate");
 				continue;
 			}else if(cmd.equalsIgnoreCase("f")){
 				makeMove(gameState);
@@ -209,15 +210,31 @@ public class Player implements Jsonizable{
 	}
 	
 	private void placeWord(Board board, Bag bag, Move move) throws InvalidPlacementException{
-		board.placeWord(move);
+		board.placeWord(move, true);
 		
-		score += move.getScore(board);
+		this.score += move.getScore();
 		
 		Tile[] wordTiles = move.getWordTiles();
-		for(int i=0; i<wordTiles.length; i++){
-			rack.remove(wordTiles[i]);
-			if(!bag.isEmpty()) rack.add(bag.drawTile());
+		for(Tile t: wordTiles){
+			if(!rack.remove(t)){
+				System.out.println("TILE NOT IN RACK: " + t.toString());
+				for(Tile tile: wordTiles){
+					System.out.println(tile.toString());
+				}
+				System.exit(0);
+			}
+			System.out.println("REMOVED: " + t.toString());
 		}
+		
+		for(Tile t: wordTiles){
+			if(!bag.isEmpty()) rack.addTile(bag.drawTile());
+		}
+		
+		board.firstMove = false;
+	}
+
+	public void setIsHuman(boolean b) {
+		isHuman = b;
 	}
 
 }
