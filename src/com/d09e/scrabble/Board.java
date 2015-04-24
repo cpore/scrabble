@@ -1,6 +1,7 @@
 package com.d09e.scrabble;
 
-import java.util.LinkedHashSet;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -92,14 +93,16 @@ public class Board implements Jsonizable{
 		return squares[row][col].getWordMultiplier();
 	}
 
-	public LinkedHashSet<Slot> getPossibleSlots(){
-		LinkedHashSet<Slot> possibleSlots = new LinkedHashSet<Slot>();
+	public Set<Slot> getPossibleSlots(){
+		// Use hash set to iteration is done in random order
+		HashSet<Slot> possibleSlots = new HashSet<Slot>();
 		for(int i=0; i<ROWS; i++){
 			for(int j=0; j<COLS; j++){
 				if(!squareIsUsed(i, j)) continue;
 
-				Slot slot = new Slot(i, j, !hasNorthNeighbor(i, j), !hasSouthNeighbor(i, j),
-						!hasWestNeighbor(i, j), !hasEastNeighbor(i, j));
+				Slot slot = new Slot(i, j, !hasNorthNeighbor(i, j),
+						!hasSouthNeighbor(i, j), !hasWestNeighbor(i, j),
+						!hasEastNeighbor(i, j));
 
 				possibleSlots.add(slot);
 			}
@@ -139,7 +142,7 @@ public class Board implements Jsonizable{
 		
 		if(!setTiles) return;
 		move.setPlacedWord(this);
-		System.out.println("PLACING:" + move.getWord() + " at " + (move.getRow()) + "," + (move.getCol()));
+		System.out.println("PLACING: " + move.getWord() + " at " + (move.getRow()) + "," + (move.getCol()));
 		
 
 	}

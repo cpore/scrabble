@@ -6,6 +6,7 @@ import java.util.Arrays;
 import com.d09e.scrabble.exception.InvalidPlacementException;
 
 public class D {
+	private static boolean DEBUG = false;
 
 	//TODO deal with bad rack, swap?
 
@@ -19,17 +20,17 @@ public class D {
 	public static boolean isValidMove(Board board, Move move){
 
 		if(!isFirstMoveOK(board, move)){
-			System.out.println("First play must be on star.");
+			if(DEBUG) System.out.println("First play must be on star.");
 			return false;
 		}
 
 		if(!wordInBoardBounds(board, move)){
-			System.out.println(move.getTileString() + ": Word not in bounds.");
+			if(DEBUG) System.out.println(move.getTileString() + ": Word not in bounds.");
 			return false;
 		}
 
 		if(!placementOk(board, move)){
-			System.out.println("Placement is invalid");
+			if(DEBUG) System.out.println("Placement is invalid");
 			return false;
 		}
 
@@ -124,7 +125,7 @@ public class D {
 	private static boolean hPlacementOk(Board board, int row, int col){
 		// check that this horizontally placed word is valid
 		if(!isHWordOk(board, row, col)){
-			System.out.println("Bad Horizontal word");
+			if(DEBUG) System.out.println("Bad Horizontal word");
 			return false;
 		}
 
@@ -149,7 +150,7 @@ public class D {
 	private static boolean vPlacementOk(Board board, int row, int col){
 		// check that this vertically placed word is valid
 		if(!isVWordOk(board, row, col)){
-			System.out.println("Bad Vertical word");
+			if(DEBUG) System.out.println("Bad Vertical word");
 			return false;
 		}
 
@@ -185,7 +186,7 @@ public class D {
 			word += board.getTile(startRow, col).getPlacedLetter();
 		}while(board.hasSouthNeighbor(startRow++, col));
 
-		System.out.println("isVWordOk: " + word);
+		if(DEBUG) System.out.println("isVWordOk: " + word);
 		return Scrabble.isValidWord(word);
 
 	}
@@ -203,7 +204,7 @@ public class D {
 			word += board.getTile(row, startCol).getPlacedLetter();
 		}while(board.hasEastNeighbor(row, startCol++));
 
-		System.out.println("isHWordOK: " + word);
+		if(DEBUG) System.out.println("isHWordOK: " + word);
 		return Scrabble.isValidWord(word);
 
 	}
@@ -224,7 +225,7 @@ public class D {
 			}
 		}while(board.hasSouthNeighbor(startRow++, col));
 
-		System.out.println("Vertical Word not connected to a cluster.");
+		if(DEBUG) System.out.println("Vertical Word not connected to a cluster.");
 		return false;
 
 	}
@@ -248,7 +249,7 @@ public class D {
 			}
 		}while(board.hasEastNeighbor(row, startCol++));
 
-		System.out.println("Horizontal Word not connected to a cluster.");
+		if(DEBUG) System.out.println("Horizontal Word not connected to a cluster.");
 		return false;
 
 	}

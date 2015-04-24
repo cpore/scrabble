@@ -98,6 +98,10 @@ public class Bag implements Jsonizable{
 	public boolean isEmpty(){
 		return tiles.isEmpty();
 	}
+	
+	public int size(){
+		return tiles.size();
+	}
 
 	@Override
 	public JSONObject toJson() {

@@ -14,6 +14,7 @@ import com.icantrap.collections.dawg.Dawg.Result;
 import com.icantrap.collections.dawg.DawgBuilder;
 
 public class Scrabble {
+	private static final boolean DEBUG = false;
 
 	public static Dawg dawg;
 
@@ -58,7 +59,7 @@ public class Scrabble {
 			String pattern = word.replace("?", ".");
 			for(Result r: Scrabble.dawg.subwords(word, word)){
 				if(r.word.matches(pattern)){
-					System.out.println("PATTERN: " + r.word + ":" + r.wordWithWildcards);
+					if(DEBUG) System.out.println("PATTERN: " + r.word + ":" + r.wordWithWildcards);
 					return true;
 				}
 			}
@@ -104,10 +105,14 @@ public class Scrabble {
 		}));
 
 		try{
-
 			gs.start();
+			
+			gs.printScores();
+			gs.printBoard();
+			System.out.println("GAME OVER! THANKS FOR PLAYING SCRABBLE(TM)!");
 
 		}catch(Exception e){
+			gs.printRacks();
 			gs.printScores();
 			gs.printBoard();
 			e.printStackTrace();
@@ -118,7 +123,6 @@ public class Scrabble {
 	private static void loadGame() {
 		try {
 			gs = GameState.loadGameState("savestates/badwildcard.state");
-			gs.setHuman();
 		} catch (JSONException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

@@ -12,7 +12,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.d09e.scrabble.player.Player;
+import com.d09e.scrabble.player.PlayerFactory;
+import com.d09e.scrabble.player.RobotPlayer;
+
 public class GameState implements Jsonizable{
+	//private static final boolean DEBUG = false;
+	
 	public static final String BOARD = "board";
 	public static final String BAG = "bag";
 	public static final String PLAYERS = "players";
@@ -30,8 +36,8 @@ public class GameState implements Jsonizable{
 
 	public GameState(){
 		players = new ArrayList<Player>();
-		players.add(new Player("ROBOT Player 1", false));
-		players.add(new Player("ROBOT Player 2", false));
+		players.add(new RobotPlayer("ROBOT Player 1"));
+		players.add(new RobotPlayer("ROBOT Player 2"));
 		bag = new Bag();
 		board = new Board();
 		
@@ -46,7 +52,7 @@ public class GameState implements Jsonizable{
 		JSONArray playerArray = jo.getJSONArray(PLAYERS);
 		players = new ArrayList<Player>();
 		for(int i=0; i<playerArray.length(); i++){
-			players.add(new Player(playerArray.getJSONObject(i)));
+			players.add(PlayerFactory.makePlayer(playerArray.getJSONObject(i)));
 		}
 		
 		currentPlayer = players.get(jo.getInt(CURRENT_PLAYER));
@@ -69,11 +75,6 @@ public class GameState implements Jsonizable{
 
 	public Player getCurrentPlayer(){
 		return currentPlayer;
-	}
-
-	public void setHuman(){
-		for(Player p: players)
-			p.setIsHuman(true);
 	}
 
 	public Board getBoard(){
@@ -110,9 +111,18 @@ public class GameState implements Jsonizable{
 	private boolean gameOver() {
 		
 		for(Player p: players){
-			if(!bag.isEmpty() || !p.getRack().isEmpty()){
+			if((!bag.isEmpty() || !p.getRack().isEmpty()) && allPlayersPass()){
 				return false;
 			}
+		}
+		
+		return true;
+	}
+	
+	private boolean allPlayersPass(){
+		for(Player p: players){
+			if(!(p.getPasses() < 1))
+				return false;
 		}
 		return true;
 	}

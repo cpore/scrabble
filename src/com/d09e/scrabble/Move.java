@@ -1,10 +1,13 @@
 package com.d09e.scrabble;
 
+import java.util.ArrayList;
+
 import com.icantrap.collections.dawg.Dawg.Result;
 
 
 public class Move implements Comparable<Move>{
-
+	private static final boolean DEBUG = false;
+	
 	private int dir;
 	private int row;
 	private int col;
@@ -17,6 +20,14 @@ public class Move implements Comparable<Move>{
 		this.row = row;
 		this. col = col;
 		this.wordTiles = wordTiles;
+	}
+	
+	public Move copy(){
+		Tile[] newTile = new Tile[wordTiles.length];
+		for(int i=0; i< wordTiles.length; i++){
+			newTile[i] = wordTiles[i].copy();
+		}
+		return new Move(dir, row, col, newTile);
 	}
 
 	public int getDir() {
@@ -89,7 +100,7 @@ public class Move implements Comparable<Move>{
 			String pattern = word.replace("?", ".");
 			for(Result r: Scrabble.dawg.subwords(word, word)){
 				if(r.word.matches(pattern)){
-					System.out.println("PATTERN: " + r.word + ":" + word);
+					if(DEBUG) System.out.println("PATTERN: " + r.word + ":" + word);
 					setPlacedTiles(word, r.word);
 					this.placedWord = r.word;
 					return;
@@ -110,6 +121,7 @@ public class Move implements Comparable<Move>{
 			}
 		}
 	}
+	
 	
 	public String getWord(){
 		return placedWord;
@@ -144,14 +156,13 @@ public class Move implements Comparable<Move>{
 			word += board.getTile(startRow, col).getLetter();
 		}while(board.hasSouthNeighbor(startRow++, col));
 
-		System.out.println("isVWordOk: " + word);
 		return word;
 	}
 	
 	@Override
 	public int compareTo(Move o) {
-		if(score > o.score) return 1;
-		else if(score < o.score) return -1;
+		if(score > o.score) return -1;
+		else if(score < o.score) return 1;
 		return 0;
 	}
 }

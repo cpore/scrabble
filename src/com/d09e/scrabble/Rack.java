@@ -1,6 +1,7 @@
 package com.d09e.scrabble;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -8,6 +9,8 @@ import org.json.JSONObject;
 import com.icantrap.collections.dawg.Dawg.Result;
 
 public class Rack implements Jsonizable{
+	private static final boolean DEBUG = false;
+
 	public static final String RACK_ARRAY = "rackArray";
 	private ArrayList<Tile> rack = new ArrayList<Tile>();
 
@@ -38,7 +41,7 @@ public class Rack implements Jsonizable{
 	}
 
 	public void addTile(Tile tile) {
-		System.out.println("ADDING TILE: " + tile.toString());
+		if(DEBUG) System.out.println("ADDING TILE: " + tile.toString());
 		if(rack.size() > 7){
 			throw new IndexOutOfBoundsException();
 		}
@@ -57,6 +60,12 @@ public class Rack implements Jsonizable{
 		System.out.println();
 	}
 
+	public Tile removeRandomTile(){
+		Tile t = rack.get(new Random().nextInt(rack.size()));
+		rack.remove(t);
+		return t;
+	}
+
 	@Override
 	public JSONObject toJson() {
 		JSONObject jo = new JSONObject();
@@ -70,23 +79,23 @@ public class Rack implements Jsonizable{
 		return rack.remove(tile);
 	}
 
-	// XXX this may get tiles that aren't from rack!!!!!!!!!!!!!!!!!!!!!!!
-	// OK
 	public Tile[] getWordTiles(String word){
 		Tile[] tiles = new Tile[word.length()];
+		char[] charArray = word.toCharArray();
 		int tileIdx = 0;
-		int rackIdx = 0;
 
-		for(Tile t: rack){
-			for(char c: word.toCharArray()){
-				if(t.getLetter() == c){
-					rackIdx++;
-					tiles[tileIdx++] = t;
+		ArrayList<Integer> skipList = new ArrayList<Integer>();
+
+		for(int i=0; i < charArray.length; i++){
+			for(int j = 0; j< rack.size(); j++){
+				if(rack.get(j).getLetter() == charArray[i] && !skipList.contains(j)){
+					tiles[tileIdx++] = rack.get(j);
+					skipList.add(j);
 					if(tileIdx == tiles.length) return tiles;
 					break;
 				}
 			}
-			
+
 		}
 
 		return tiles;
@@ -95,15 +104,16 @@ public class Rack implements Jsonizable{
 	public Tile[] getWordTiles(String wordWithWC, String word){
 		Tile[] tiles = new Tile[wordWithWC.length()];
 		int tileIdx = 0;
-		int rackIdx = 0;
 		char[] wordArray = wordWithWC.toCharArray();
 
-		for(Tile t: rack){
-			for(int i=0; i<wordArray.length; i++ ){
-				if(t.getLetter() == wordArray[i]){
-					if(wordArray[i] == '?') t.setPlacedLetter(word.charAt(i));
-					rackIdx++;
-					tiles[tileIdx++] = t;
+		ArrayList<Integer> skipList = new ArrayList<Integer>();
+		
+		for(int i=0; i<wordArray.length; i++ ){
+			for(int j = 0; j< rack.size(); j++){
+				if(rack.get(j).getLetter() == wordArray[i] && !skipList.contains(j)){
+					if(wordArray[i] == '?') rack.get(j).setPlacedLetter(word.charAt(i));
+					tiles[tileIdx++] = rack.get(j);
+					skipList.add(j);
 					if(tileIdx == tiles.length) return tiles;
 					break;
 				}
@@ -111,7 +121,7 @@ public class Rack implements Jsonizable{
 		}
 		return tiles;
 	}
-
+/*
 	public void setPlacedTiles(String wordWithWC, String word){
 		char[] wordArray = wordWithWC.toCharArray();
 		for( int i=0; i<wordArray.length; i++ ){
@@ -122,7 +132,7 @@ public class Rack implements Jsonizable{
 				}
 			}
 		}
-	}
+	}*/
 
 	/*	public boolean rackContains(String word){
 		for(char c: word.toCharArray()){
