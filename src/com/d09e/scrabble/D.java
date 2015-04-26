@@ -105,7 +105,8 @@ public class D {
 
 
 		try {
-			tempBoard.placeWord(move, false);
+			tempBoard.placeWord(move, move.getTileString().contains("?"));
+			//tempBoard.placeWord(move, false);
 		} catch (InvalidPlacementException e) {
 			System.out.println("Word out of bounds");
 			return false;

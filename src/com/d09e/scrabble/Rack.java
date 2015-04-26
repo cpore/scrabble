@@ -88,7 +88,7 @@ public class Rack implements Jsonizable{
 
 		for(int i=0; i < charArray.length; i++){
 			for(int j = 0; j< rack.size(); j++){
-				if(rack.get(j).getLetter() == charArray[i] && !skipList.contains(j)){
+				if(!skipList.contains(j) && rack.get(j).getLetter() == charArray[i]){
 					tiles[tileIdx++] = rack.get(j);
 					skipList.add(j);
 					if(tileIdx == tiles.length) return tiles;
@@ -101,7 +101,7 @@ public class Rack implements Jsonizable{
 		return tiles;
 	}
 
-	public Tile[] getWordTiles(String wordWithWC, String word){
+	/*public Tile[] getWordTiles(String wordWithWC, String word){
 		Tile[] tiles = new Tile[wordWithWC.length()];
 		int tileIdx = 0;
 		char[] wordArray = wordWithWC.toCharArray();
@@ -120,7 +120,7 @@ public class Rack implements Jsonizable{
 			}
 		}
 		return tiles;
-	}
+	}*/
 /*
 	public void setPlacedTiles(String wordWithWC, String word){
 		char[] wordArray = wordWithWC.toCharArray();

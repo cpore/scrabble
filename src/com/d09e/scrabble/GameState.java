@@ -15,6 +15,7 @@ import org.json.JSONObject;
 import com.d09e.scrabble.player.Player;
 import com.d09e.scrabble.player.PlayerFactory;
 import com.d09e.scrabble.player.RobotPlayer;
+import com.d09e.scrabble.stats.StatsCollector;
 
 public class GameState implements Jsonizable{
 	//private static final boolean DEBUG = false;
@@ -34,10 +35,13 @@ public class GameState implements Jsonizable{
 	private Player currentPlayer;
 	private int playerIdx;
 
-	public GameState(){
+	public GameState(String p1Name, String p2Name){
 		players = new ArrayList<Player>();
-		players.add(new RobotPlayer("ROBOT Player 1"));
-		players.add(new RobotPlayer("ROBOT Player 2"));
+		Player p1 = new RobotPlayer(p1Name);
+		Player p2 = new RobotPlayer(p2Name);
+		players.add(p1);
+		players.add(p2);
+		
 		bag = new Bag();
 		board = new Board();
 		
@@ -99,13 +103,44 @@ public class GameState implements Jsonizable{
 	}
 
 	public void start(){
-	
+		
+		long startTime = System.currentTimeMillis();
+		for(int i=0; i<players.size(); i++){
+			StatsCollector sc = new StatsCollector(players.get(i).getName());
+			sc.start(startTime);
+			Scrabble.stats.add(sc);
+		}
+		
 		while(!gameOver()){
 			currentPlayer = players.get(playerIdx);
-			currentPlayer.getMove(GameState.this);
-			
+			StatsCollector sc = Scrabble.stats.get(playerIdx);
 			playerIdx = (playerIdx + 1) % players.size();
+			
+			long startMove = System.currentTimeMillis();
+			Move move = currentPlayer.getMove(GameState.this);
+			
+			if(move == null) continue;
+			sc.addMove(System.currentTimeMillis()-startMove, move.getScore(), move.getWord().length());
+			
 		}
+		
+		long endTime = System.currentTimeMillis();
+		for(int i=0; i<players.size(); i++){
+			Player p = players.get(i);
+			StatsCollector sc = Scrabble.stats.get(i);
+			sc.finish(endTime, p.getScore(), isWinner(p));
+			//System.out.println(sc.getStats());
+		}
+		
+		
+	}
+	
+	private boolean isWinner(Player p){
+		int pScore = p.getScore();
+		for(Player other: players){
+			if(!other.equals(p) && other.getScore() > pScore) return false;
+		}
+		return true;
 	}
 
 	private boolean gameOver() {
@@ -120,11 +155,15 @@ public class GameState implements Jsonizable{
 	}
 	
 	private boolean allPlayersPass(){
+		ArrayList<Boolean> passList = new ArrayList<Boolean>();
 		for(Player p: players){
-			if(!(p.getPasses() < 1))
-				return false;
+			if(p.getPasses() > 1){
+				passList.add(true);
+			}else{
+				passList.add(false);
+			}
 		}
-		return true;
+		return passList.contains(false);
 	}
 
 	/**

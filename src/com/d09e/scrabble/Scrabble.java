@@ -6,9 +6,12 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import org.json.JSONException;
 
+import com.d09e.scrabble.stats.Automator;
+import com.d09e.scrabble.stats.StatsCollector;
 import com.icantrap.collections.dawg.Dawg;
 import com.icantrap.collections.dawg.Dawg.Result;
 import com.icantrap.collections.dawg.DawgBuilder;
@@ -19,6 +22,12 @@ public class Scrabble {
 	public static Dawg dawg;
 
 	private static GameState gs;
+	
+	public static ArrayList<StatsCollector> stats;
+	private static final boolean automate = true;
+	private static String p1Name = "ROBOT 1";
+	private static String p2Name = "ROBOT 2";
+	
 
 	private static void initDawg()throws IOException{
 		String dawgFileName = "./dawg/twl06.dat";
@@ -53,14 +62,20 @@ public class Scrabble {
 	}
 
 	public static boolean isValidWord(String word){
-		if(word.equals("?")) return true;
+		if(word.equals("?")){
+			System.out.println("FOUND SINGLE ?");
+			return true;
+		}
 
 		if(word.contains("?")){
 			String pattern = word.replace("?", ".");
 			for(Result r: Scrabble.dawg.subwords(word, word)){
-				if(r.word.matches(pattern)){
-					if(DEBUG) System.out.println("PATTERN: " + r.word + ":" + r.wordWithWildcards);
+				//System.out.println(word + " Result: " + r.word);
+				if(r.word.matches(pattern) && r.word.length() == word.length()){
+					if(!DEBUG) System.out.println("PATTERN: " + pattern + ":" + r.word + ":" + r.wordWithWildcards);
 					return true;
+				}else{
+					if(DEBUG) System.out.println("BAD PATTERN: " + pattern + ":" + r.word + ":" + r.wordWithWildcards);
 				}
 			}
 			return false;
@@ -73,30 +88,43 @@ public class Scrabble {
 	}
 
 	public static void main(String[] args) {
+		if(automate)
+			Automator.go();
+		else
+			play(p1Name, p2Name);
 
+	}
+
+	public static void play(String p1Name, String p2Name) {
 		try {
 			initDawg();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
+		/*	Result[] results = Scrabble.dawg.subwords("D?N?", "D?N?");
+		for(Result r: results){
+			System.out.println("PATTERN: " + r.word);
+			//return;
+		}
+		System.exit(0);*/
+
 		System.out.println("WELCOME TO SCRABBLE(TM)!");
 
 		//loadGame();
-
-		if(gs == null) gs = new GameState();
+		stats = new ArrayList<StatsCollector>();
+		if(gs == null || automate) gs = new GameState(p1Name, p2Name);
 
 
 		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
 
 			@Override
 			public void run() {
-				String error = "savestates/error";
+				//String error = "savestates/error";
 
-				gs.saveGameState(error);
+				//gs.saveGameState(error);
 				GameState.gameOver = true;
 				System.out.flush();
-				System.out.println("ABORTED");
 				gs.printRacks();
 				gs.printScores();
 				gs.printBoard();
@@ -106,7 +134,7 @@ public class Scrabble {
 
 		try{
 			gs.start();
-			
+
 			gs.printScores();
 			gs.printBoard();
 			System.out.println("GAME OVER! THANKS FOR PLAYING SCRABBLE(TM)!");
@@ -117,12 +145,12 @@ public class Scrabble {
 			gs.printBoard();
 			e.printStackTrace();
 		}
-
 	}
 
+	@SuppressWarnings("unused")
 	private static void loadGame() {
 		try {
-			gs = GameState.loadGameState("savestates/badwildcard.state");
+			gs = GameState.loadGameState("savestates/doublewildcard.state");
 		} catch (JSONException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

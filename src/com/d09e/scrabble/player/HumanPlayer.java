@@ -37,15 +37,16 @@ public class HumanPlayer extends Player{
 	}
 
 	@Override
-	public void getMove(GameState gameState) {
-		promptForWord(gameState);
+	public Move getMove(GameState gameState) {
+		return promptForWord(gameState);
 	}
 
-	private void promptForWord(GameState gameState) {
+	private Move promptForWord(GameState gameState) {
 
 		@SuppressWarnings("resource")
 		Scanner scanner = new Scanner(System.in);
 		boolean moveOk = false;
+		Move move = null;
 		while(!moveOk){
 			System.out.print(name + ": " + score + " ");
 			rack.printRack();
@@ -79,7 +80,7 @@ public class HumanPlayer extends Player{
 				gameState.saveGameState("savestates/savestate");
 				continue;
 			}else if(cmd.equalsIgnoreCase("f")){
-				Move move = Search.findBestMove(gameState);
+				move = Search.findBestMove(gameState);
 				if(D.isValidMove(gameState.getBoard(), move)){
 
 					try {
@@ -90,7 +91,7 @@ public class HumanPlayer extends Player{
 					}
 					moveOk = true;
 					lineScanner.close();
-					return;
+					return move;
 				}else{
 					System.out.println("Move not OK");
 					continue;
@@ -116,7 +117,7 @@ public class HumanPlayer extends Player{
 
 			if(DEBUG) System.out.println(String.valueOf(row) + " " + String.valueOf(col) + " " + word);
 
-			Move move = new Move(dir, row, col, rack.getWordTiles(word));
+			move = new Move(dir, row, col, rack.getWordTiles(word));
 
 			if(D.isValidMove(gameState.getBoard(), move)){
 
@@ -133,6 +134,7 @@ public class HumanPlayer extends Player{
 			}
 
 		}
+		return move;
 		//scanner.close();
 	}
 

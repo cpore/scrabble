@@ -1,14 +1,12 @@
 package com.d09e.scrabble;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
-import java.util.TreeSet;
 
 import org.apache.commons.lang3.ArrayUtils;
-
-import com.d09e.scrabble.exception.InvalidPlacementException;
-import com.icantrap.collections.dawg.Dawg.Result;
 
 public class Search {
 	private static final boolean DEBUG = false;
@@ -16,29 +14,37 @@ public class Search {
 	private Search(){ }
 
 	public static Move findBestMove(GameState gameState){
-		TreeSet<Move> possibleMoves = new TreeSet<Move>();
+		ArrayList<Move> possibleMoves = new ArrayList<Move>();
 
-		if(gameState.getBoard().firstMove){
+		/*if(gameState.getBoard().firstMove){
 			possibleMoves = getFirstMoves(gameState);
 		}else{
-			Set<Slot> possibleSlots = gameState.getBoard().getPossibleSlots();
+			
 			possibleMoves = getPossibleMoves(possibleSlots, gameState);
-		}
-
-		//Collections.sort(possibleMoves);
+		}*/
+		
+		Set<Slot> possibleSlots = gameState.getBoard().getPossibleSlots(gameState.getBoard().firstMove);
+		possibleMoves = getPossibleMoves(possibleSlots, gameState);
 
 		if(possibleMoves.size() <= 0){
 			if(DEBUG) System.out.println("NO MOVES FOUND!!!!");
 			return null;
 		}
-		return possibleMoves.first();//get(possibleMoves.size()-1);
+		Collections.sort(possibleMoves);
+		return possibleMoves.get(0);
 	}
 
-	private static TreeSet<Move> getPossibleMoves(Set<Slot> possibleSlots, GameState gameState) {
-		TreeSet<Move> possibleMoves = new TreeSet<Move>();
+	private static ArrayList<Move> getPossibleMoves(Set<Slot> possibleSlots, GameState gameState) {
+		ArrayList<Move> possibleMoves = new ArrayList<Move>();
 		String rackString = gameState.getCurrentPlayer().getRack().getRackString();
 
+		//limit the search to only using one wildcard because things get crazy if there are two
+		//int wildcardCount = rackString.length() - rackString.replace("?", "").length();
+		//if(wildcardCount > 1) rackString.replaceFirst("\\?", "");
+		
 		Set<String> combos = generateAll(rackString, rackString.length());
+		
+		if(gameState.getBoard().firstMove) combos.remove("?");
 
 		long start = System.currentTimeMillis();
 		long end = start + 15000l;
@@ -54,14 +60,16 @@ public class Search {
 					while(!board.hasNorthNeighbor(slot.getRow()-rowPos, slot.getCol()) && rowPos < word.length()){
 						rowPos++;
 						Move move = getMove(gameState, D.VERTICAL, slot.getRow()-rowPos, slot.getCol(), word);
-						if(word.contains("?")) System.out.println(word);
-						if(null != move) possibleMoves.add(move);
+						//if(word.contains("?")) System.out.println(word);
+						if(null != move){
+							possibleMoves.add(move);
+						}
 					}
 				}
 
 				if(slot.isOpenSouth()){
 					Move move = getMove(gameState, D.VERTICAL, slot.getRow()+1, slot.getCol(), word);
-					if(word.contains("?")) System.out.println(word);
+					//if(word.contains("?")) System.out.println(word);
 					if(null != move) possibleMoves.add(move);
 
 				}
@@ -69,7 +77,7 @@ public class Search {
 
 				if(slot.isOpenEast()){
 					Move move = getMove(gameState, D.HORIZONTAL, slot.getRow(), slot.getCol()+1, word);
-					if(word.contains("?")) System.out.println(word);
+					//if(word.contains("?")) System.out.println(word);
 					if(null != move) possibleMoves.add(move);
 
 				}
@@ -80,12 +88,10 @@ public class Search {
 					while(!board.hasWestNeighbor(slot.getRow(), slot.getCol()-colPos) && colPos < word.length()){
 						colPos++;
 						Move move = getMove(gameState, D.HORIZONTAL, slot.getRow(), slot.getCol()-colPos, word);
-						if(word.contains("?")) System.out.println(word);
+						//if(word.contains("?")) System.out.println(word);
 						if(null != move) possibleMoves.add(move);
 					}
 				}
-
-
 			}
 		}
 
@@ -97,16 +103,11 @@ public class Search {
 	}
 
 	private static Move getMove(GameState gameState, int dir, int row, int col, String word) {
-		Rack rack = gameState.getCurrentPlayer().getRack();
+		Rack rack = gameState.getCurrentPlayer().getRack().copy();
 		Move possibleMove = new Move(dir, row, col, rack.getWordTiles(word));
 		Board board = gameState.getBoard();
+		
 		if(D.isValidMove(board, possibleMove)){
-			try {
-				board.copy().placeWord(possibleMove, false);
-			} catch (InvalidPlacementException e) {
-				e.printStackTrace();
-			}
-			if(DEBUG) System.out.println("WORD OK, Tiles: " + possibleMove.getTileString() /*+ " Word: " + possibleMove.getWord()*/);
 			return possibleMove;
 		}
 
@@ -139,96 +140,5 @@ public class Search {
 				generate(newStr, newInput, 	dup, n);
 			}
 		}
-	}
-
-	private static TreeSet<Move> getFirstMoves(GameState gameState){
-		TreeSet<Move> firstMoves = new TreeSet<Move>();
-
-		Rack rack = gameState.getCurrentPlayer().getRack();
-		Result[] words = Scrabble.getSubwords(rack.getRackString());
-
-		Board board = gameState.getBoard();
-
-
-		for(Result r: words){
-			Tile[] wordTiles = rack.getWordTiles(r.wordWithWildcards);
-
-			for(int i=1; i<7; i++){
-				if(r.word.length() < 7-(i-1)) continue;
-				if(DEBUG) System.out.println("TRying word: " + r.word);
-
-				Move possibleHMove = new Move(D.HORIZONTAL, 7, i, wordTiles);
-
-				if(D.isValidMove(board, possibleHMove)){
-					if(DEBUG){
-						for(Tile t: wordTiles)
-							System.out.println("WORD OK1: " + t.toString());
-					}
-					Board boardCopy = board.copy();
-					try {
-						boardCopy.placeWord(possibleHMove, false);
-					} catch (InvalidPlacementException e) {
-						e.printStackTrace();
-					}
-					firstMoves.add(possibleHMove);
-				}
-
-				Move possibleVMove = new Move(D.VERTICAL, i, 7, wordTiles);
-
-				if(D.isValidMove(board, possibleVMove)){
-					if(DEBUG){
-						for(Tile t: wordTiles)
-							System.out.println("WORD OK2: " + t.toString());
-					}
-					Board boardCopy = board.copy();
-					try {
-						boardCopy.placeWord(possibleVMove, false);
-					} catch (InvalidPlacementException e) {
-						e.printStackTrace();
-					}
-					firstMoves.add(possibleVMove);
-				}
-			}
-
-			Move possibleMove = new Move(D.HORIZONTAL, 7, 7, wordTiles);
-
-			if(D.isValidMove(board, possibleMove)){
-				if(DEBUG){
-					for(Tile t: wordTiles)
-						System.out.println("WORD OK3: " + t.toString());
-				}
-				Board boardCopy = board.copy();
-				try {
-					boardCopy.placeWord(possibleMove, false);
-				} catch (InvalidPlacementException e) {
-					e.printStackTrace();
-				}
-				firstMoves.add(possibleMove);
-			}
-
-			Move possibleVMove = new Move(D.VERTICAL, 7, 7, wordTiles);
-
-			if(D.isValidMove(board, possibleVMove)){
-				if(DEBUG){
-					for(Tile t: wordTiles)
-						System.out.println("WORD OK4: " + t.toString());
-				}
-				Board boardCopy = board.copy();
-				try {
-					boardCopy.placeWord(possibleVMove, false);
-				} catch (InvalidPlacementException e) {
-					e.printStackTrace();
-				}
-				firstMoves.add(possibleVMove);
-			}
-		}
-
-		if(DEBUG){
-			for(Move m: firstMoves){
-				System.out.println(m.getScore());
-			}
-		}
-
-		return firstMoves;
 	}
 }

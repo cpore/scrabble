@@ -32,7 +32,7 @@ public class RobotPlayer extends Player{
 	}
 
 	@Override
-	public void getMove(GameState gameState){
+	public Move getMove(GameState gameState){
 		Move move = Search.findBestMove(gameState);
 		// TODO handle no moves found
 		if(move == null){
@@ -43,7 +43,7 @@ public class RobotPlayer extends Player{
 				gameState.printBoard();
 			}
 			handleNoMove(gameState);
-			return;
+			return move;
 		}
 		//should already be valid move based on search
 		//but just in case...
@@ -60,6 +60,8 @@ public class RobotPlayer extends Player{
 			//TODO handle passing
 
 		}
+		
+		return move;
 	}
 
 	protected void handleNoMove(GameState gameState){

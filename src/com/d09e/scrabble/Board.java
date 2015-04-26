@@ -93,8 +93,9 @@ public class Board implements Jsonizable{
 		return squares[row][col].getWordMultiplier();
 	}
 
-	public Set<Slot> getPossibleSlots(){
-		// Use hash set to iteration is done in random order
+	public Set<Slot> getPossibleSlots(boolean firstMove){
+		if(firstMove) return getFirstSlots();
+		// Use hash set to ensure iteration is done in random order
 		HashSet<Slot> possibleSlots = new HashSet<Slot>();
 		for(int i=0; i<ROWS; i++){
 			for(int j=0; j<COLS; j++){
@@ -108,6 +109,19 @@ public class Board implements Jsonizable{
 			}
 		}
 		return possibleSlots;
+	}
+	
+	private static Set<Slot> getFirstSlots(){
+		HashSet<Slot> firstSlots = new HashSet<Slot>();
+
+		firstSlots.add(new Slot(6, 7, false, true, false, false));
+		firstSlots.add(new Slot(8, 7, true, false, false, false));
+		firstSlots.add(new Slot(7, 6, false, false, false, true));
+		firstSlots.add(new Slot(7, 8, false, false, true, false));
+		
+		
+		return firstSlots;
+		
 	}
 
 
@@ -142,9 +156,7 @@ public class Board implements Jsonizable{
 		
 		if(!setTiles) return;
 		move.setPlacedWord(this);
-		System.out.println("PLACING: " + move.getWord() + " at " + (move.getRow()) + "," + (move.getCol()));
-		
-
+		//System.out.println("PLACING: " + move.getWord() + " at " + (move.getRow()) + "," + (move.getCol()));
 	}
 
 	public boolean squareIsUsed(int row, int col){

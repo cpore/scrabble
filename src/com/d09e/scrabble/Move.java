@@ -7,7 +7,7 @@ import com.icantrap.collections.dawg.Dawg.Result;
 
 public class Move implements Comparable<Move>{
 	private static final boolean DEBUG = false;
-	
+
 	private int dir;
 	private int row;
 	private int col;
@@ -21,7 +21,7 @@ public class Move implements Comparable<Move>{
 		this. col = col;
 		this.wordTiles = wordTiles;
 	}
-	
+
 	public Move copy(){
 		Tile[] newTile = new Tile[wordTiles.length];
 		for(int i=0; i< wordTiles.length; i++){
@@ -49,7 +49,7 @@ public class Move implements Comparable<Move>{
 	public Tile[] getWordTiles() {
 		return wordTiles;
 	}
-	
+
 	/*public Tile[] getPlacedWordTiles() {
 		//not all the tiles may have been used after they have been placed? 
 		//TODO
@@ -66,7 +66,7 @@ public class Move implements Comparable<Move>{
 	public void setScore(int score){
 		this.score = score;
 	}
-	
+
 	public int getScore(){
 		return score;
 	}
@@ -84,45 +84,55 @@ public class Move implements Comparable<Move>{
 	 * @return
 	 */
 	public void setPlacedWord(Board board){
-		
+
 		if(dir == D.HORIZONTAL){
 			placedWord = getMainHWord(board);
 		}else{
 			placedWord = getMainVWord(board);
 		}
-		
+
 		setPlacedWordTiles(placedWord);
 
 	}
-	
+
 	public void setPlacedWordTiles(String word){
 		if(word.contains("?")){
 			String pattern = word.replace("?", ".");
-			for(Result r: Scrabble.dawg.subwords(word, word)){
+			Result[] results = Scrabble.dawg.subwords(word, word);
+			if(results == null){
+				System.out.println("results null with word: " + word);
+				System.exit(0);
+				return;
+			}
+			for(Result r: results){
 				if(r.word.matches(pattern)){
-					if(DEBUG) System.out.println("PATTERN: " + r.word + ":" + word);
+					if(DEBUG) System.out.println("SET TILE PATTERN: " + r.word + ":" + word);
 					setPlacedTiles(word, r.word);
 					this.placedWord = r.word;
 					return;
 				}
 			}
+			if(DEBUG) System.out.println("NO MATCHES!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 		}
 	}
-	
-	//XXX
+
 	private void setPlacedTiles(String wordWithWC, String word){
-		char[] wordArray = wordWithWC.toCharArray();
-		for( int i=0; i<wordArray.length;i++ ){
-			for(Tile t: wordTiles){
-				if(t.getLetter() == wordArray[i] && wordArray[i] == '?'){
-					t.setPlacedLetter(word.charAt(i));
+		char[] charArray = wordWithWC.toCharArray();
+
+		ArrayList<Integer> skipList = new ArrayList<Integer>();
+
+		for(int i=0; i<charArray.length; i++){
+			for(int j = 0; j< wordTiles.length; j++){
+				if(!skipList.contains(j) && wordTiles[j].getLetter() == charArray[i] && charArray[i] == '?'){
+					wordTiles[j].setPlacedLetter(word.charAt(i));
+					skipList.add(j);
 					break;
 				}
 			}
 		}
 	}
-	
-	
+
+
 	public String getWord(){
 		return placedWord;
 	}
@@ -136,7 +146,7 @@ public class Move implements Comparable<Move>{
 		}
 
 		do{
-			word += board.getTile(row, startCol).getLetter();
+			word += board.getTile(row, startCol).getPlacedLetter();
 		}while(board.hasEastNeighbor(row, startCol++));
 
 		return word;
@@ -153,14 +163,15 @@ public class Move implements Comparable<Move>{
 
 		do{
 			//TODO getLetter or getPlacedLetter ?
-			word += board.getTile(startRow, col).getLetter();
+			word += board.getTile(startRow, col).getPlacedLetter();
 		}while(board.hasSouthNeighbor(startRow++, col));
 
 		return word;
 	}
-	
+
 	@Override
 	public int compareTo(Move o) {
+		//sorts in descending order
 		if(score > o.score) return -1;
 		else if(score < o.score) return 1;
 		return 0;

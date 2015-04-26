@@ -8,6 +8,7 @@ import java.util.Set;
 import org.apache.commons.lang3.ArrayUtils;
 
 import com.d09e.scrabble.exception.InvalidPlacementException;
+import com.icantrap.collections.dawg.Dawg.Result;
 
 public class SearchOld {
 	private static final boolean DEBUG = false;
@@ -141,5 +142,72 @@ public class SearchOld {
 		}
 	}
 
-	
+	@SuppressWarnings("unused")
+	private static ArrayList<Move> getFirstMoves(GameState gameState){
+		ArrayList<Move> firstMoves = new ArrayList<Move>();
+
+		Rack rack = gameState.getCurrentPlayer().getRack();
+		Result[] words = Scrabble.getSubwords(rack.getRackString());
+
+		Board board = gameState.getBoard();
+
+
+		for(Result r: words){
+			Tile[] wordTiles = rack.getWordTiles(r.wordWithWildcards);
+
+			for(int i=1; i<7; i++){
+				if(r.word.length() < 7-(i-1)) continue;
+				if(DEBUG) System.out.println("TRying word: " + r.word);
+
+				Move possibleHMove = new Move(D.HORIZONTAL, 7, i, wordTiles);
+
+				if(D.isValidMove(board, possibleHMove)){
+					if(DEBUG){
+						for(Tile t: wordTiles)
+							System.out.println("WORD OK1: " + t.toString());
+					}
+					firstMoves.add(possibleHMove);
+				}
+
+				Move possibleVMove = new Move(D.VERTICAL, i, 7, wordTiles);
+
+				if(D.isValidMove(board, possibleVMove)){
+					if(DEBUG){
+						for(Tile t: wordTiles)
+							System.out.println("WORD OK2: " + t.toString());
+					}
+					firstMoves.add(possibleVMove);
+				}
+			}
+
+			Move possibleHMove = new Move(D.HORIZONTAL, 7, 7, wordTiles);
+
+			if(D.isValidMove(board, possibleHMove)){
+				if(DEBUG){
+					for(Tile t: wordTiles)
+						System.out.println("WORD OK3: " + t.toString());
+				}
+				firstMoves.add(possibleHMove);
+			}
+
+			Move possibleVMove = new Move(D.VERTICAL, 7, 7, wordTiles);
+
+			if(D.isValidMove(board, possibleVMove)){
+				if(DEBUG){
+					for(Tile t: wordTiles)
+						System.out.println("WORD OK4: " + t.toString());
+				}
+				firstMoves.add(possibleVMove);
+			}
+		}
+
+		if(DEBUG){
+			for(Move m: firstMoves){
+				System.out.println(m.getScore());
+			}
+		}
+
+		return firstMoves;
+	}
+
 }

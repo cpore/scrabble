@@ -15,7 +15,7 @@ import com.d09e.scrabble.exception.InvalidPlacementException;
 
 public abstract class Player implements Jsonizable{
 	private static final boolean DEBUG = false;
-
+	
 	public static final String NAME = "name";
 	public static final String SCORE = "score";
 	public static final String RACK = "rack";
@@ -51,7 +51,7 @@ public abstract class Player implements Jsonizable{
 
 	protected abstract int type();
 
-	public abstract void getMove(GameState gameState);
+	public abstract Move getMove(GameState gameState);
 
 	protected abstract void handleNoMove(GameState gameState);
 
@@ -66,7 +66,7 @@ public abstract class Player implements Jsonizable{
 		jo.put(TYPE, type());
 		return jo;
 	}
-
+	
 	public int getScore() {
 		return score;
 	}
@@ -122,6 +122,8 @@ public abstract class Player implements Jsonizable{
 			}
 
 		}
+		
+		System.out.println(gameState.getCurrentPlayer().getName() + " placed:" + move.getWord());
 
 		board.firstMove = false;
 	}
@@ -149,6 +151,7 @@ public abstract class Player implements Jsonizable{
 				continue;
 			}else{
 				rack.addTile(bagTile);
+				succesfulSwaps++;
 			}
 		}
 
