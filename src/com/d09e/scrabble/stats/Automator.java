@@ -6,23 +6,29 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 
 import com.d09e.scrabble.Scrabble;
+import com.d09e.scrabble.player.MaxScorePlayer;
+import com.d09e.scrabble.player.Player;
+import com.d09e.scrabble.player.UseQPlayer;
 
 public class Automator {
 
-	private static final int ITERATIONS = 100;
 	private static final ArrayList<StatsCollector> p1Stats = new ArrayList<StatsCollector>();
 	private static final ArrayList<StatsCollector> p2Stats = new ArrayList<StatsCollector>();
+	public static String scenario;
 	
-	private static String p1Name = "ROBOT 1";
-	private static String p2Name = "ROBOT 2";
-	public static String scenario = "exhaustive-search";
-	private Automator(){
-		
+	public Automator(String scenario){
+		Automator.scenario = scenario;
 	}
 	
-	public static void go(){
-		for(int i=1; i<=ITERATIONS; i++){
-			Scrabble.play(p1Name, p2Name);
+	public void go(int iterations){
+		String p1Name = "UseQPlayer";
+		String p2Name = "MaxScorePlayer";
+		
+		for(int i=1; i<=iterations; i++){
+			Player p1 = new UseQPlayer(p1Name);
+			Player p2 = new MaxScorePlayer(p2Name);
+			Scrabble.play(p1, p2);
+			if(!((UseQPlayer) p1).usedQ) continue;
 			p1Stats.add(Scrabble.stats.get(0));
 			p2Stats.add(Scrabble.stats.get(1));
 		}

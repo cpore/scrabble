@@ -62,6 +62,7 @@ public class Search {
 						Move move = getMove(gameState, D.VERTICAL, slot.getRow()-rowPos, slot.getCol(), word);
 						//if(word.contains("?")) System.out.println(word);
 						if(null != move){
+							gameState.getCurrentPlayer().getUtility(gameState, move);
 							possibleMoves.add(move);
 						}
 					}
@@ -70,7 +71,10 @@ public class Search {
 				if(slot.isOpenSouth()){
 					Move move = getMove(gameState, D.VERTICAL, slot.getRow()+1, slot.getCol(), word);
 					//if(word.contains("?")) System.out.println(word);
-					if(null != move) possibleMoves.add(move);
+					if(null != move){
+						gameState.getCurrentPlayer().getUtility(gameState, move);
+						possibleMoves.add(move);
+					}
 
 				}
 
@@ -78,7 +82,10 @@ public class Search {
 				if(slot.isOpenEast()){
 					Move move = getMove(gameState, D.HORIZONTAL, slot.getRow(), slot.getCol()+1, word);
 					//if(word.contains("?")) System.out.println(word);
-					if(null != move) possibleMoves.add(move);
+					if(null != move){
+						gameState.getCurrentPlayer().getUtility(gameState, move);
+						possibleMoves.add(move);
+					}
 
 				}
 
@@ -89,7 +96,10 @@ public class Search {
 						colPos++;
 						Move move = getMove(gameState, D.HORIZONTAL, slot.getRow(), slot.getCol()-colPos, word);
 						//if(word.contains("?")) System.out.println(word);
-						if(null != move) possibleMoves.add(move);
+						if(null != move){
+							gameState.getCurrentPlayer().getUtility(gameState, move);
+							possibleMoves.add(move);
+						}
 					}
 				}
 			}
@@ -107,7 +117,7 @@ public class Search {
 		Move possibleMove = new Move(dir, row, col, rack.getWordTiles(word));
 		Board board = gameState.getBoard();
 		
-		if(D.isValidMove(board, possibleMove)){
+		if(D.isValidMove(board, possibleMove, gameState.getCurrentPlayer())){
 			return possibleMove;
 		}
 

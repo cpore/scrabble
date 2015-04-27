@@ -9,26 +9,26 @@ import com.d09e.scrabble.Rack;
 import com.d09e.scrabble.Search;
 import com.d09e.scrabble.exception.InvalidPlacementException;
 
-public class RobotPlayer extends Player{
+public class MaxScorePlayer extends Player implements Evaluator{
 
 	private static final boolean DEBUG = false;
 
-	public RobotPlayer(String name){
+	public MaxScorePlayer(String name){
 		super(name);
 	}
 
 	// copy ctor
-	public RobotPlayer(String name, int score, Rack rack){
+	public MaxScorePlayer(String name, int score, Rack rack){
 		super(name, score, rack);
 	}
 
-	public RobotPlayer(JSONObject jo){
+	public MaxScorePlayer(JSONObject jo){
 		super(jo);
 	}
 
 	@Override
 	public Player copy(){
-		return new RobotPlayer(name, score, rack.copy());
+		return new MaxScorePlayer(name, score, rack.copy());
 	}
 
 	@Override
@@ -47,7 +47,7 @@ public class RobotPlayer extends Player{
 		}
 		//should already be valid move based on search
 		//but just in case...
-		if(D.isValidMove(gameState.getBoard().copy(), move)){
+		if(D.isValidMove(gameState.getBoard().copy(), move, null)){
 
 			try {
 				placeWord(gameState, move);
@@ -80,6 +80,11 @@ public class RobotPlayer extends Player{
 
 	@Override
 	protected int type() {
-		return PlayerFactory.ROBOT;
+		return PlayerFactory.MAX_SCORE;
+	}
+
+	@Override
+	public float getUtility(GameState gameState, Move move) {
+		return move.getUtility();
 	}
 }

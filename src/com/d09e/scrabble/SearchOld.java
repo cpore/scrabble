@@ -101,7 +101,7 @@ public class SearchOld {
 		Rack rack = gameState.getCurrentPlayer().getRack();
 		Move possibleMove = new Move(dir, row, col, rack.getWordTiles(word));
 		Board board = gameState.getBoard();
-		if(D.isValidMove(board, possibleMove)){
+		if(D.isValidMove(board, possibleMove, null)){
 			try {
 				board.copy().placeWord(possibleMove, false);
 			} catch (InvalidPlacementException e) {
@@ -161,7 +161,7 @@ public class SearchOld {
 
 				Move possibleHMove = new Move(D.HORIZONTAL, 7, i, wordTiles);
 
-				if(D.isValidMove(board, possibleHMove)){
+				if(D.isValidMove(board, possibleHMove, null)){
 					if(DEBUG){
 						for(Tile t: wordTiles)
 							System.out.println("WORD OK1: " + t.toString());
@@ -171,7 +171,7 @@ public class SearchOld {
 
 				Move possibleVMove = new Move(D.VERTICAL, i, 7, wordTiles);
 
-				if(D.isValidMove(board, possibleVMove)){
+				if(D.isValidMove(board, possibleVMove, null)){
 					if(DEBUG){
 						for(Tile t: wordTiles)
 							System.out.println("WORD OK2: " + t.toString());
@@ -182,7 +182,7 @@ public class SearchOld {
 
 			Move possibleHMove = new Move(D.HORIZONTAL, 7, 7, wordTiles);
 
-			if(D.isValidMove(board, possibleHMove)){
+			if(D.isValidMove(board, possibleHMove, null)){
 				if(DEBUG){
 					for(Tile t: wordTiles)
 						System.out.println("WORD OK3: " + t.toString());
@@ -192,7 +192,7 @@ public class SearchOld {
 
 			Move possibleVMove = new Move(D.VERTICAL, 7, 7, wordTiles);
 
-			if(D.isValidMove(board, possibleVMove)){
+			if(D.isValidMove(board, possibleVMove, null)){
 				if(DEBUG){
 					for(Tile t: wordTiles)
 						System.out.println("WORD OK4: " + t.toString());

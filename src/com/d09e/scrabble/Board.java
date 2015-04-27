@@ -153,7 +153,6 @@ public class Board implements Jsonizable{
 		}
 		
 		move.getScore(this);
-		
 		if(!setTiles) return;
 		move.setPlacedWord(this);
 		//System.out.println("PLACING: " + move.getWord() + " at " + (move.getRow()) + "," + (move.getCol()));

@@ -2,7 +2,7 @@ package com.d09e.scrabble.stats;
 
 public class StatsCollector {
 
-	private String scenario = Automator.scenario;
+	private String scenario;
 	private String agent;
 
 	private float minMoveTime, maxMoveTime, avgMoveTime;
@@ -14,13 +14,14 @@ public class StatsCollector {
 	private float gameTime;
 	private int numberOfMoves, numWildcardMoves;
 	private int score;
-	private boolean win;
+	private int win;
 	
 	public static final String header = "agent,min-move-time,max-move-time,"
 			+ "avg-move-time,max-move-score,avg-move-score,avg-word-length,"
 			+ "num-moves,game-time,score,win";
 	
-	public StatsCollector(String agent){
+	public StatsCollector(String scenario, String agent){
+		this.scenario = scenario;
 		this.agent = agent;
 		avgMoveTime = 0l;
 		avgWordLength = 0;
@@ -52,7 +53,7 @@ public class StatsCollector {
 		this.startTime = startTime;
 	}
 	
-	public void finish(long endtime, int score, boolean win){
+	public void finish(long endtime, int score, int win){
 		gameTime = (float)(endtime-startTime)/1000f;
 		this.score = score;
 		this.win = win;

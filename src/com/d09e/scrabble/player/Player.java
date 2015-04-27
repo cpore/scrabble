@@ -13,7 +13,7 @@ import com.d09e.scrabble.Rack;
 import com.d09e.scrabble.Tile;
 import com.d09e.scrabble.exception.InvalidPlacementException;
 
-public abstract class Player implements Jsonizable{
+public abstract class Player implements Jsonizable, Evaluator{
 	private static final boolean DEBUG = false;
 	
 	public static final String NAME = "name";

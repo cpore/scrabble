@@ -81,7 +81,7 @@ public class HumanPlayer extends Player{
 				continue;
 			}else if(cmd.equalsIgnoreCase("f")){
 				move = Search.findBestMove(gameState);
-				if(D.isValidMove(gameState.getBoard(), move)){
+				if(D.isValidMove(gameState.getBoard(), move, null)){
 
 					try {
 						placeWord(gameState, move);
@@ -119,7 +119,7 @@ public class HumanPlayer extends Player{
 
 			move = new Move(dir, row, col, rack.getWordTiles(word));
 
-			if(D.isValidMove(gameState.getBoard(), move)){
+			if(D.isValidMove(gameState.getBoard(), move, null)){
 
 				try {
 					placeWord(gameState, move);
@@ -156,6 +156,11 @@ public class HumanPlayer extends Player{
 	@Override
 	protected int type() {
 		return PlayerFactory.HUMAN;
+	}
+
+	@Override
+	public float getUtility(GameState gameState, Move move) {
+		return 0;
 	}
 
 }

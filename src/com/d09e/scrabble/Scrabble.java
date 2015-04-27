@@ -10,6 +10,8 @@ import java.util.ArrayList;
 
 import org.json.JSONException;
 
+import com.d09e.scrabble.player.MaxScorePlayer;
+import com.d09e.scrabble.player.Player;
 import com.d09e.scrabble.stats.Automator;
 import com.d09e.scrabble.stats.StatsCollector;
 import com.icantrap.collections.dawg.Dawg;
@@ -25,9 +27,6 @@ public class Scrabble {
 	
 	public static ArrayList<StatsCollector> stats;
 	private static final boolean automate = true;
-	private static String p1Name = "ROBOT 1";
-	private static String p2Name = "ROBOT 2";
-	
 
 	private static void initDawg()throws IOException{
 		String dawgFileName = "./dawg/twl06.dat";
@@ -88,14 +87,19 @@ public class Scrabble {
 	}
 
 	public static void main(String[] args) {
-		if(automate)
-			Automator.go();
-		else
-			play(p1Name, p2Name);
+		
+		if(automate){
+			final int ITERATIONS = 100;
+			new Automator("UseQ_vs_MaxScore").go(ITERATIONS);
+		}else{
+			Player p1 = new MaxScorePlayer("UseQPlayer");
+			Player p2 = new MaxScorePlayer("MaxScorePlayer");
+			play(p1, p2);
+		}
 
 	}
 
-	public static void play(String p1Name, String p2Name) {
+	public static void play(Player p1, Player p2) {
 		try {
 			initDawg();
 		} catch (IOException e) {
@@ -113,7 +117,7 @@ public class Scrabble {
 
 		//loadGame();
 		stats = new ArrayList<StatsCollector>();
-		if(gs == null || automate) gs = new GameState(p1Name, p2Name);
+		if(gs == null || automate) gs = new GameState(p1, p2);
 
 
 		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {

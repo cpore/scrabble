@@ -14,7 +14,7 @@ import org.json.JSONObject;
 
 import com.d09e.scrabble.player.Player;
 import com.d09e.scrabble.player.PlayerFactory;
-import com.d09e.scrabble.player.RobotPlayer;
+import com.d09e.scrabble.stats.Automator;
 import com.d09e.scrabble.stats.StatsCollector;
 
 public class GameState implements Jsonizable{
@@ -35,10 +35,8 @@ public class GameState implements Jsonizable{
 	private Player currentPlayer;
 	private int playerIdx;
 
-	public GameState(String p1Name, String p2Name){
+	public GameState(Player p1, Player p2){
 		players = new ArrayList<Player>();
-		Player p1 = new RobotPlayer(p1Name);
-		Player p2 = new RobotPlayer(p2Name);
 		players.add(p1);
 		players.add(p2);
 		
@@ -106,7 +104,7 @@ public class GameState implements Jsonizable{
 		
 		long startTime = System.currentTimeMillis();
 		for(int i=0; i<players.size(); i++){
-			StatsCollector sc = new StatsCollector(players.get(i).getName());
+			StatsCollector sc = new StatsCollector(Automator.scenario, players.get(i).getName());
 			sc.start(startTime);
 			Scrabble.stats.add(sc);
 		}
@@ -135,12 +133,12 @@ public class GameState implements Jsonizable{
 		
 	}
 	
-	private boolean isWinner(Player p){
+	private int isWinner(Player p){
 		int pScore = p.getScore();
 		for(Player other: players){
-			if(!other.equals(p) && other.getScore() > pScore) return false;
+			if(!other.equals(p) && other.getScore() > pScore) return 0;
 		}
-		return true;
+		return 1;
 	}
 
 	private boolean gameOver() {

@@ -13,6 +13,7 @@ public class Move implements Comparable<Move>{
 	private int col;
 	private Tile[] wordTiles;
 	private int score = 0;
+	private float utility = 0f;
 	private String placedWord;
 
 	public Move(int dir, int row, int col, Tile[] wordTiles){
@@ -63,8 +64,13 @@ public class Move implements Comparable<Move>{
 		return tileString;
 	}
 
-	public void setScore(int score){
-		this.score = score;
+	public void setUtility(float utility){
+		this.utility = utility;
+	}
+	
+	public float getUtility(){
+		if(utility == 0) return score;
+		return utility;
 	}
 
 	public int getScore(){
@@ -172,8 +178,8 @@ public class Move implements Comparable<Move>{
 	@Override
 	public int compareTo(Move o) {
 		//sorts in descending order
-		if(score > o.score) return -1;
-		else if(score < o.score) return 1;
+		if(getUtility() > o.getUtility()) return -1;
+		else if(getUtility() < o.getUtility()) return 1;
 		return 0;
 	}
 }
