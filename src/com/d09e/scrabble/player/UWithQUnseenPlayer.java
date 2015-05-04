@@ -5,24 +5,24 @@ import org.json.JSONObject;
 import com.d09e.scrabble.GameState;
 import com.d09e.scrabble.Move;
 
-public class SmartSMovePlayer extends MaxScorePlayer{
-
-	public SmartSMovePlayer(String name) {
+public class UWithQUnseenPlayer extends UseQPlayer{
+	
+	public UWithQUnseenPlayer(String name) {
 		super(name);
 	}
 	
-	public SmartSMovePlayer(JSONObject jo) {
+	public UWithQUnseenPlayer(JSONObject jo) {
 		super(jo);
 	}
 	
 	@Override
 	protected int type() {
-		return PlayerFactory.SMART_S_MOVE;
+		return PlayerFactory.U_WITH_Q_UNSEEN;
 	}
 	
 	@Override
 	public float getUtility(GameState gameState, Move move) {
-		return smartSMove(gameState, move);
+		return uWithQUnseen(gameState, move);
 	}
 
 }

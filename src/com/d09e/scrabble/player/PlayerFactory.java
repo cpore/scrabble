@@ -9,6 +9,8 @@ public class PlayerFactory {
 	public static final int SMART_S_MOVE = 4;
 	public static final int USE_BONUS_SQUARES = 5;
 	public static final int USE_Q = 6;
+	public static final int U_WITH_Q_UNSEEN = 7;
+	public static final int TILE_TURNOVER = 8;
 	
 	public static Player makePlayer(JSONObject jo){
 		int type = jo.getInt(Player.TYPE);
@@ -27,6 +29,10 @@ public class PlayerFactory {
 			return new UseBonusSquaresPlayer(jo);
 		case USE_Q:
 			return new UseQPlayer(jo);
+		case U_WITH_Q_UNSEEN:
+			return new UWithQUnseenPlayer(jo);
+		case TILE_TURNOVER:
+			return new TileTurnoverPlayer(jo);
 		}
 		
 		return new HumanPlayer(jo);

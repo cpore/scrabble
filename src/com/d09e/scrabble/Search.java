@@ -62,7 +62,8 @@ public class Search {
 						Move move = getMove(gameState, D.VERTICAL, slot.getRow()-rowPos, slot.getCol(), word);
 						//if(word.contains("?")) System.out.println(word);
 						if(null != move){
-							gameState.getCurrentPlayer().getUtility(gameState, move);
+							float delta = gameState.getCurrentPlayer().getUtility(gameState, move);
+							move.setUtility(delta);
 							possibleMoves.add(move);
 						}
 					}
@@ -72,7 +73,8 @@ public class Search {
 					Move move = getMove(gameState, D.VERTICAL, slot.getRow()+1, slot.getCol(), word);
 					//if(word.contains("?")) System.out.println(word);
 					if(null != move){
-						gameState.getCurrentPlayer().getUtility(gameState, move);
+						float delta = gameState.getCurrentPlayer().getUtility(gameState, move);
+						move.setUtility(delta);
 						possibleMoves.add(move);
 					}
 
@@ -83,7 +85,8 @@ public class Search {
 					Move move = getMove(gameState, D.HORIZONTAL, slot.getRow(), slot.getCol()+1, word);
 					//if(word.contains("?")) System.out.println(word);
 					if(null != move){
-						gameState.getCurrentPlayer().getUtility(gameState, move);
+						float delta = gameState.getCurrentPlayer().getUtility(gameState, move);
+						move.setUtility(delta);
 						possibleMoves.add(move);
 					}
 
@@ -97,7 +100,8 @@ public class Search {
 						Move move = getMove(gameState, D.HORIZONTAL, slot.getRow(), slot.getCol()-colPos, word);
 						//if(word.contains("?")) System.out.println(word);
 						if(null != move){
-							gameState.getCurrentPlayer().getUtility(gameState, move);
+							float delta = gameState.getCurrentPlayer().getUtility(gameState, move);
+							move.setUtility(delta);
 							possibleMoves.add(move);
 						}
 					}

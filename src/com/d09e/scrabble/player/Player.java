@@ -1,5 +1,6 @@
 package com.d09e.scrabble.player;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import org.json.JSONObject;
@@ -15,18 +16,21 @@ import com.d09e.scrabble.exception.InvalidPlacementException;
 
 public abstract class Player implements Jsonizable, Evaluator{
 	private static final boolean DEBUG = false;
-	
+
 	public static final String NAME = "name";
 	public static final String SCORE = "score";
 	public static final String RACK = "rack";
 	public static final String PASSES = "passes";
 	public static final String TYPE = "type";
-	
+
 	protected int passes = 0;
 
 	protected String name;
 	protected int score;
 	protected Rack rack;
+
+	//heuristc variables
+	public boolean usedQ = false;
 
 	public Player(String name){
 		this.name = name;
@@ -66,7 +70,7 @@ public abstract class Player implements Jsonizable, Evaluator{
 		jo.put(TYPE, type());
 		return jo;
 	}
-	
+
 	public int getScore() {
 		return score;
 	}
@@ -78,7 +82,7 @@ public abstract class Player implements Jsonizable, Evaluator{
 	public Rack getRack() {
 		return rack;
 	}
-	
+
 	public int getPasses(){
 		return passes;
 	}
@@ -122,7 +126,7 @@ public abstract class Player implements Jsonizable, Evaluator{
 			}
 
 		}
-		
+
 		System.out.println(gameState.getCurrentPlayer().getName() + " placed:" + move.getWord());
 
 		board.firstMove = false;
@@ -140,13 +144,13 @@ public abstract class Player implements Jsonizable, Evaluator{
 		int succesfulSwaps = 0;
 		// swap a random number of tiles
 		int rand = new Random().nextInt(rack.size());
-		
+
 		for(int i=0; i<rand; i++){
-			
+
 			Tile bagTile = bag.drawTile();
-			
+
 			Tile rackTile = rack.removeRandomTile();
-			
+
 			if(rackTile.getLetter() == '?'){
 				continue;
 			}else{
@@ -158,4 +162,98 @@ public abstract class Player implements Jsonizable, Evaluator{
 		return succesfulSwaps > 0;
 	}
 
+	// Heuristics
+	protected float useQ(GameState gameState, Move move) {
+		if(move.getTileString().contains("Q")){
+			usedQ = true;
+			return 200f;
+		}
+		return 0f;
+	}
+
+	protected float uWithQUnseen(GameState gameState, Move move){
+		if(move.getTileString().contains("U") && move.getTileString().contains("Q")){
+			usedQ = true;
+			return 200f;
+		}
+
+		if(gameState.getBoard().qUnseen()
+				&& move.getTileString().contains("U")){
+			return -12f;
+		}
+		return 0f;
+	}
+
+	protected float saveCommon(GameState gameState, Move move){
+		float delta = 0f;
+		Rack rackCopy = gameState.getCurrentPlayer().getRack().copy();
+		for(Tile t: move.getWordTiles()){
+			rackCopy.remove(t);
+		}
+		for(Tile t: rackCopy.getRackTiles()){
+			if(t.getLetter() == 'A'){
+				delta += 5f;
+			}else if(t.getLetter() == 'E'){
+				delta += 5f;
+			}else if(t.getLetter() == 'I'){
+				delta += 5f;
+			}else if(t.getLetter() == 'N'){
+				delta += 5f;
+			}else if(t.getLetter() == 'R'){
+				delta += 5f;
+			}else if(t.getLetter() == 'S'){
+				delta += 5f;
+			}
+		}
+
+		return delta;
+	}
+
+	protected float smartSMove(GameState gameState, Move move){
+		return 0;
+	}
+
+	protected float useBonusSquares(GameState gameState, Move move){
+
+		return 0f;
+	}
+
+	protected float tileTurnover(GameState gameState, Move move){
+		float averageTileValue = getAverageTileValue(gameState.getBoard().getTiles());
+		float delta = 0f;
+		float rackValue = 0f;
+
+		Rack rackCopy = gameState.getCurrentPlayer().getRack().copy();
+
+		for(Tile t: rackCopy.getRackTiles()){
+			rackValue += t.getValue();
+		}
+
+		for(Tile t: move.getWordTiles()){
+			rackCopy.remove(t);
+		}
+		for(Tile t: rackCopy.getRackTiles()){
+			delta += t.getValue();
+		}
+		if(gameState.getBag().size() >= 7){
+			for(int i=0; i<7-rackCopy.getRackTiles().size(); i++){
+				delta += averageTileValue;
+			}
+		}
+
+		return delta > rackValue ? delta : rackValue;
+
+	}
+
+	private float getAverageTileValue(ArrayList<Tile> boardTiles){
+		Bag bag = new Bag();
+		bag.removeTiles(boardTiles);
+
+		float total = 0f;
+		for(Tile t: bag.getTiles()){
+			total += t.getValue();
+		}
+
+		return total/bag.getTiles().size();
+	}
 }

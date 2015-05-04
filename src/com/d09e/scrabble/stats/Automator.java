@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import com.d09e.scrabble.Scrabble;
 import com.d09e.scrabble.player.MaxScorePlayer;
 import com.d09e.scrabble.player.Player;
+import com.d09e.scrabble.player.TileTurnoverPlayer;
 import com.d09e.scrabble.player.UseQPlayer;
 
 public class Automator {
@@ -21,14 +22,14 @@ public class Automator {
 	}
 	
 	public void go(int iterations){
-		String p1Name = "UseQPlayer";
+		String p1Name = "TileTurnoverPlayer";
 		String p2Name = "MaxScorePlayer";
 		
 		for(int i=1; i<=iterations; i++){
-			Player p1 = new UseQPlayer(p1Name);
+			Player p1 = new TileTurnoverPlayer(p1Name);
 			Player p2 = new MaxScorePlayer(p2Name);
 			Scrabble.play(p1, p2);
-			if(!((UseQPlayer) p1).usedQ) continue;
+			if(p1 instanceof UseQPlayer && !p1.usedQ) continue;
 			p1Stats.add(Scrabble.stats.get(0));
 			p2Stats.add(Scrabble.stats.get(1));
 		}

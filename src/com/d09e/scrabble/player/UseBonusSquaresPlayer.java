@@ -22,8 +22,7 @@ public class UseBonusSquaresPlayer extends MaxScorePlayer{
 	
 	@Override
 	public float getUtility(GameState gameState, Move move) {
-		// TODO Auto-generated method stub
-		return move.getUtility();
+		return useBonusSquares(gameState, move);
 	}
 
 }

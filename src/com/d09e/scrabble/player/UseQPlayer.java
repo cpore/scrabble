@@ -7,8 +7,6 @@ import com.d09e.scrabble.Move;
 
 public class UseQPlayer extends MaxScorePlayer{
 	
-	public boolean usedQ = false;
-
 	public UseQPlayer(String name) {
 		super(name);
 	}
@@ -24,11 +22,7 @@ public class UseQPlayer extends MaxScorePlayer{
 	
 	@Override
 	public float getUtility(GameState gameState, Move move) {
-		if(move.getTileString().contains("Q")){
-			usedQ = true;
-			move.setUtility(move.getScore() + 200);
-		}
-		return move.getUtility();
+		return useQ(gameState, move);
 	}
 
 }

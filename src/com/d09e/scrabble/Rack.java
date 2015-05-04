@@ -48,7 +48,7 @@ public class Rack implements Jsonizable{
 		rack.add(tile);
 	}
 
-	public ArrayList<Tile> getRack(){
+	public ArrayList<Tile> getRackTiles(){
 		return rack;
 	}
 

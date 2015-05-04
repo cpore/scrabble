@@ -112,4 +112,11 @@ public class Bag implements Jsonizable{
 		return jo;
 	}
 	
+	public void removeTiles(ArrayList<Tile> tiles){
+		tiles.removeAll(tiles);
+	}
+	
+	public ArrayList<Tile> getTiles(){
+		return tiles;
+	}
 }

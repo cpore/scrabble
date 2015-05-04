@@ -1,5 +1,6 @@
 package com.d09e.scrabble;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -76,9 +77,35 @@ public class Board implements Jsonizable{
 		}
 		return true;
 	}
+	
+	public boolean qUnseen(){
+		for(int i=0; i<ROWS; i++){
+			for(int j=0; j<COLS; j++){
+				Tile t = squares[i][j].getTile();
+				if(null != t && t.getLetter() == 'Q'){
+					return false;
+				}
+			}
+		}
+		return true;
+	}
 
 	public Tile getTile(int row, int col){
 		return squares[row][col].getTile();
+	}
+	
+	public ArrayList<Tile> getTiles(){
+		ArrayList<Tile> boardtiles = new ArrayList<Tile>();
+		
+		for(int i=0; i<ROWS; i++){
+			for(int j=0; j<COLS; j++){
+				Tile t = squares[i][j].getTile();
+				if(null != t ){
+					boardtiles.add(t);
+				}
+			}
+		}
+		return boardtiles;
 	}
 
 	public boolean isStar(int row, int col){

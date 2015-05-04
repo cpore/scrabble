@@ -64,8 +64,8 @@ public class Move implements Comparable<Move>{
 		return tileString;
 	}
 
-	public void setUtility(float utility){
-		this.utility = utility;
+	public void setUtility(float delta){
+		this.utility = score + delta;
 	}
 	
 	public float getUtility(){

@@ -90,9 +90,9 @@ public class Scrabble {
 		
 		if(automate){
 			final int ITERATIONS = 100;
-			new Automator("UseQ_vs_MaxScore").go(ITERATIONS);
+			new Automator("TileTurnover_vs_MaxScore").go(ITERATIONS);
 		}else{
-			Player p1 = new MaxScorePlayer("UseQPlayer");
+			Player p1 = new MaxScorePlayer("MaxScorePlayer");
 			Player p2 = new MaxScorePlayer("MaxScorePlayer");
 			play(p1, p2);
 		}

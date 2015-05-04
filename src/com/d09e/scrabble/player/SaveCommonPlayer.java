@@ -22,8 +22,7 @@ public class SaveCommonPlayer extends MaxScorePlayer{
 	
 	@Override
 	public float getUtility(GameState gameState, Move move) {
-		// TODO Auto-generated method stub
-		return 0;
+		return saveCommon(gameState, move);
 	}
 
 }
