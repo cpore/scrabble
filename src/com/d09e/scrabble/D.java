@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import com.d09e.scrabble.exception.InvalidPlacementException;
-import com.d09e.scrabble.player.Evaluator;
 
 public class D {
 	private static boolean DEBUG = false;
@@ -18,7 +17,7 @@ public class D {
 
 
 
-	public static boolean isValidMove(Board board, Move move, Evaluator evaluator){
+	public static boolean isValidMove(Board board, Move move){
 
 		if(!isFirstMoveOK(board, move)){
 			if(DEBUG) System.out.println("First play must be on star.");

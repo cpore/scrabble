@@ -14,7 +14,6 @@ import org.json.JSONObject;
 
 import com.d09e.scrabble.player.Player;
 import com.d09e.scrabble.player.PlayerFactory;
-import com.d09e.scrabble.stats.Automator;
 import com.d09e.scrabble.stats.StatsCollector;
 
 public class GameState implements Jsonizable{
@@ -104,7 +103,7 @@ public class GameState implements Jsonizable{
 		
 		long startTime = System.currentTimeMillis();
 		for(int i=0; i<players.size(); i++){
-			StatsCollector sc = new StatsCollector(Automator.scenario, players.get(i).getName());
+			StatsCollector sc = new StatsCollector(players.get(i).getName());
 			sc.start(startTime);
 			Scrabble.stats.add(sc);
 		}

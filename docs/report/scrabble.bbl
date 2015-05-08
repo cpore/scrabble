@@ -1,10 +1,22 @@
 \begin{thebibliography}{}
 
+\bibitem[\protect\citeauthoryear{Appel and Jacobson}{1988}]{Appel1988}
+Appel, A.~W., and Jacobson, G.~J.
+\newblock 1988.
+\newblock The world's fastest scrabble program.
+\newblock {\em Commun. ACM} 31(5):572--578.
+
 \bibitem[\protect\citeauthoryear{Shapiro and Smith}{1982}]{Shapiro1982}
 Shapiro, S.~C., and Smith, H.~R.
 \newblock 1982.
 \newblock A scrabble crossword game playing program.
 \newblock Technical Report 119, Indiana University.
+
+\bibitem[\protect\citeauthoryear{Sheppard}{2002}]{1sheppard2002}
+Sheppard, B.
+\newblock 2002.
+\newblock World-championship-caliber scrabble.
+\newblock {\em Artificial Intelligence} 134(1):241--275.
 
 \bibitem[\protect\citeauthoryear{Torre and Verducci}{2008}]{Torre2008}
 Torre, J., and Verducci, T.

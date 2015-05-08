@@ -31,6 +31,10 @@ public class HumanPlayer extends Player{
 		super(jo);
 	}
 
+	public HumanPlayer() {
+		super("HumanPlayer");
+	}
+
 	@Override
 	public Player copy(){
 		return new HumanPlayer(name, score, rack.copy());
@@ -81,7 +85,7 @@ public class HumanPlayer extends Player{
 				continue;
 			}else if(cmd.equalsIgnoreCase("f")){
 				move = Search.findBestMove(gameState);
-				if(D.isValidMove(gameState.getBoard(), move, null)){
+				if(D.isValidMove(gameState.getBoard(), move)){
 
 					try {
 						placeWord(gameState, move);
@@ -119,7 +123,7 @@ public class HumanPlayer extends Player{
 
 			move = new Move(dir, row, col, rack.getWordTiles(word));
 
-			if(D.isValidMove(gameState.getBoard(), move, null)){
+			if(D.isValidMove(gameState.getBoard(), move)){
 
 				try {
 					placeWord(gameState, move);

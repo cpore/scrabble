@@ -16,7 +16,7 @@ public class Board implements Jsonizable{
 	public static final int ROWS = 15;
 	public static final int COLS = 15;
 	public boolean firstMove;
-	private Square[][] squares = new Square[ROWS][COLS];
+	public Square[][] squares = new Square[ROWS][COLS];
 
 	public Board() {
 		//initialize squares

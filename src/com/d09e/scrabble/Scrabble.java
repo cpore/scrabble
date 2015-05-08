@@ -12,6 +12,7 @@ import org.json.JSONException;
 
 import com.d09e.scrabble.player.MaxScorePlayer;
 import com.d09e.scrabble.player.Player;
+import com.d09e.scrabble.player.PlayerFactory;
 import com.d09e.scrabble.stats.Automator;
 import com.d09e.scrabble.stats.StatsCollector;
 import com.icantrap.collections.dawg.Dawg;
@@ -24,7 +25,7 @@ public class Scrabble {
 	public static Dawg dawg;
 
 	private static GameState gs;
-	
+
 	public static ArrayList<StatsCollector> stats;
 	private static final boolean automate = true;
 
@@ -87,10 +88,10 @@ public class Scrabble {
 	}
 
 	public static void main(String[] args) {
-		
+
 		if(automate){
 			final int ITERATIONS = 100;
-			new Automator("TileTurnover_vs_MaxScore").go(ITERATIONS);
+			new Automator().go(ITERATIONS, PlayerFactory.MULTI4, PlayerFactory.MAX_SCORE);
 		}else{
 			Player p1 = new MaxScorePlayer("MaxScorePlayer");
 			Player p2 = new MaxScorePlayer("MaxScorePlayer");

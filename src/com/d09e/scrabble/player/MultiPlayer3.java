@@ -6,38 +6,38 @@ import com.d09e.scrabble.GameState;
 import com.d09e.scrabble.Move;
 import com.d09e.scrabble.Rack;
 
-public class UWithQUnseenPlayer extends UseQPlayer{
+public class MultiPlayer3 extends Player{
 
-	public UWithQUnseenPlayer(String name) {
+	public MultiPlayer3(String name) {
 		super(name);
 	}
 
-	public UWithQUnseenPlayer(JSONObject jo) {
+	public MultiPlayer3(JSONObject jo) {
 		super(jo);
 	}
 
 	// copy ctor
-	public UWithQUnseenPlayer(String name, int score, Rack rack){
+	public MultiPlayer3(String name, int score, Rack rack){
 		super(name, score, rack);
 	}
 
-	public UWithQUnseenPlayer() {
-		super("UWithQUnseenPlayer");
+	public MultiPlayer3() {
+		super("MultiPlayer3");
 	}
 
 	@Override
 	public Player copy(){
-		return new UWithQUnseenPlayer(name, score, rack.copy());
+		return new MultiPlayer3(name, score, rack.copy());
 	}
 
 	@Override
 	protected int type() {
-		return PlayerFactory.U_WITH_Q_UNSEEN;
+		return PlayerFactory.MULTI3;
 	}
 
 	@Override
 	public float getUtility(GameState gameState, Move move) {
-		return uWithQUnseen(gameState, move);
+		return useQ(gameState, move) + vowelConsonant(gameState, move);
 	}
 
 }

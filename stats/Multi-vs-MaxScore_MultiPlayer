@@ -1,0 +1,11 @@
+agent,min-move-time,max-move-time,avg-move-time,max-move-score,avg-move-score,avg-word-length,num-moves,game-time,score,win
+MultiPlayer,0.001,7.337,3.0,76,20,4,21,194.8,425,1
+MultiPlayer,0.001,15.102,4.4,60,25,5,16,121.6,407,1
+MultiPlayer,0.001,15.275,6.0,66,23,5,18,169.1,426,1
+MultiPlayer,0.013,4.206,2.2,57,25,4,17,107.9,433,1
+MultiPlayer,0.004,15.611,4.7,74,20,4,20,147.8,416,1
+MultiPlayer,0.001,15.047,3.4,74,28,5,16,110.8,458,1
+MultiPlayer,0.002,15.117,3.4,79,24,5,16,137.8,395,1
+MultiPlayer,0.001,15.172,4.0,149,29,5,16,112.8,466,1
+MultiPlayer,0.003,15.065,3.7,41,21,4,16,131.3,341,1
+MultiPlayer,0.003,15.088,4.6,33,19,4,19,130.6,364,1

@@ -2,7 +2,6 @@ package com.d09e.scrabble.stats;
 
 public class StatsCollector {
 
-	private String scenario;
 	private String agent;
 
 	private float minMoveTime, maxMoveTime, avgMoveTime;
@@ -20,8 +19,7 @@ public class StatsCollector {
 			+ "avg-move-time,max-move-score,avg-move-score,avg-word-length,"
 			+ "num-moves,game-time,score,win";
 	
-	public StatsCollector(String scenario, String agent){
-		this.scenario = scenario;
+	public StatsCollector(String agent){
 		this.agent = agent;
 		avgMoveTime = 0l;
 		avgWordLength = 0;
@@ -97,8 +95,6 @@ public class StatsCollector {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((agent == null) ? 0 : agent.hashCode());
-		result = prime * result
-				+ ((scenario == null) ? 0 : scenario.hashCode());
 		return result;
 	}
 
@@ -115,11 +111,6 @@ public class StatsCollector {
 			if (other.agent != null)
 				return false;
 		} else if (!agent.equals(other.agent))
-			return false;
-		if (scenario == null) {
-			if (other.scenario != null)
-				return false;
-		} else if (!scenario.equals(other.scenario))
 			return false;
 		return true;
 	}

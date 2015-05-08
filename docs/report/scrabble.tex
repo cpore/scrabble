@@ -11,9 +11,9 @@
 % Uncomment and complete the following for metadata
 %(your paper must compile with PDFL A TEX)
 \pdfinfo{
-/Title (Input Your Paper Title Here)
-/Author (John Doe, Jane Doe)
-/Keywords (Input your paper’s keywords in this optional area)
+/Title (Reproducing A Competitive Scrabble Agent)
+/Author (Casey Pore)
+/Keywords (Reproducing A Competitive Scrabble Agent)
 }%%%%%%%%%%
 % Section Numbers
 % Uncomment if you want to use section numbers
@@ -21,7 +21,7 @@
 % \setcounter{secnumdepth}{0}
 %%%%%%%%%%
 % Title, Author, and Address Information
-\title{A Scrabble Agent and Whatnot}
+\title{Reproducing A Competitive Scrabble Agent}
 \author{Casey Pore \\
 Colorado State University\\
 cpore@rams.colostate.edu\\
@@ -31,14 +31,21 @@ cpore@rams.colostate.edu\\
 \begin{document}
 \maketitle
 
-\begin{abstract}
-\begin{quote}
-AAAI creates ...
-\end{quote}
-\end{abstract}
+%\begin{abstract}
+%\begin{quote}
+%AAAI creates ...
+%\end{quote}
+%\end{abstract}
 
 \section{Problem Description}
-what were you trying to do; this should describe the problem addressed by the project. Use your original proposals as a starting point for this part. Also, include your hypothesis(es) here along with a precis of what you found.
+What were you trying to do; this should describe the problem addressed by the project. Use your original proposals as a starting point for this part. Also, include your hypothesis(es) here along with a precis of what you found.
+
+
+In this paper, I describe the process of building and evaluating a Scrabble agent from scratch that is capable of competitive play. The unique properties of Scrabble make it difficult to apply existing generalized AI strategies common to other games, such as an adversarial search. In fact, even the best Scrabble agent (Brian Sheppard's Maven) do not utilize any local search techniques until the very end of the game, although it has been shown that the end-game search can be crucial for cinching a win against the best human players \cite{1sheppard2002}. As we will see, creating a competitive Scrabble player is more about adding features that incrementally improve the agent's chances for higher scoring, such as a combination of move selection heuristics and end-game search, than it is any one over-arching concept of Artificial Intelligence. This sentiment was expressed by Brian Shepard when he said his program, Maven, "is a good example of the 'fundamental engineering' approach to intelligent behavior" \cite{1sheppard2002}.
+
+Scrabble is a game of imperfect information. Outcomes are highly dependent on the usefulness of the tiles a player randomly draws from the bag to make high scoring moves. Additionally, it cannot be known what tiles the opponent holds. This makes it difficult (or at least futile) for an agent to plan ahead or anticipate future states of the game from which to make informed decisions about how to play its tiles. This limits our options for quickly generating moves an agent may select to play. To accomplish the goal of generating possible move quickly, an efficient data structure along with an algorithm for identifying valid moves lie at the heart of my implementation, as well as agents that have come before mine. Once this fundamental technique was in place, I worked toward adding heuristics to improve the chances of maximizing the average move score in hopes of drawing my agent closer to being as competitive a player as Maven.
+
+After completing the move generation algorithm, the first heuristic implemented was to simply choose the move which produced the the highest score. I found that my implementation, though slightly slower than Appel and Jacobson's player from which I based my implementation, out-performed their player in regards to average move score by a significant margin \cite{Appel1988}. Next, I implemented several heuristics (taking inspiration from a few different sources) under the hypothesis that each heuristic would add a statistically significant increase to the average move score of my agent and increase its win ratio. An agent was created for each of these heuristics and pitted against an agent using only the basic maximum score heuristic to evaluate their effectiveness. Finally, after evaluating which of these individual heuristics led to a better outcome, I implemented several agents that use different combinations of the heuristics hypothesizing that they would lead to even better outcomes. These multi-heuristic agents were pitted against the maximum score agent to evaluate which combinations worked the best. I found that almost all of the multi-heuristic agents played better than any single-heuristic agent for creating strong Scrabble agent, however, not all of the single-heuristic agents bested the maximum score agent.
 
 \section{Previous Work}
 survey what approaches have been adopted before. It may be a quick reference to the AI techniques selected for the project or it could reference papers on the problem or on the previous approaches taken to the problem. It depends on the composition of the project; if it extends previous work, then reference what it extends; if it is novel, then reference techniques that motivated the design. References should be from publications rather than web sites; the exception to that is if you downloaded code or problems from a website.

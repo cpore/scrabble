@@ -121,7 +121,7 @@ public class Search {
 		Move possibleMove = new Move(dir, row, col, rack.getWordTiles(word));
 		Board board = gameState.getBoard();
 		
-		if(D.isValidMove(board, possibleMove, gameState.getCurrentPlayer())){
+		if(D.isValidMove(board, possibleMove)){
 			return possibleMove;
 		}
 
