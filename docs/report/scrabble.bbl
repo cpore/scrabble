@@ -6,6 +6,12 @@ Appel, A.~W., and Jacobson, G.~J.
 \newblock The world's fastest scrabble program.
 \newblock {\em Commun. ACM} 31(5):572--578.
 
+\bibitem[\protect\citeauthoryear{Schaeffer}{2001}]{Schaeffer2001}
+Schaeffer, J.
+\newblock 2001.
+\newblock A gamut of games.
+\newblock {\em AI Magazine} 22(3):29.
+
 \bibitem[\protect\citeauthoryear{Shapiro and Smith}{1982}]{Shapiro1982}
 Shapiro, S.~C., and Smith, H.~R.
 \newblock 1982.
@@ -17,17 +23,5 @@ Sheppard, B.
 \newblock 2002.
 \newblock World-championship-caliber scrabble.
 \newblock {\em Artificial Intelligence} 134(1):241--275.
-
-\bibitem[\protect\citeauthoryear{Torre and Verducci}{2008}]{Torre2008}
-Torre, J., and Verducci, T.
-\newblock 2008.
-\newblock {\em The Yankee Years}.
-\newblock Doubleday.
-
-\bibitem[\protect\citeauthoryear{Young}{2013}]{Young2013}
-Young, S.
-\newblock 2013.
-\newblock Building a program that plays scrabble.
-\newblock http://www.scotthyoung.com/blog/2013/02/21/wordsmith/.
 
 \end{thebibliography}

@@ -3,44 +3,44 @@ Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
 The top-level auxiliary file: scrabble.aux
 The style file: aaai.bst
 Database file #1: Scrabble.bib
-You've used 5 entries,
+You've used 4 entries,
             2568 wiz_defined-function locations,
-            613 strings with 5137 characters,
-and the built_in function-call counts, 1675 in all, are:
-= -- 179
-> -- 53
+            608 strings with 5017 characters,
+and the built_in function-call counts, 1394 in all, are:
+= -- 152
+> -- 40
 < -- 1
-+ -- 19
-- -- 16
-* -- 125
-:= -- 290
-add.period$ -- 25
-call.type$ -- 5
-change.case$ -- 27
-chr.to.int$ -- 5
-cite$ -- 5
-duplicate$ -- 64
-empty$ -- 125
-format.name$ -- 24
-if$ -- 333
++ -- 15
+- -- 12
+* -- 113
+:= -- 244
+add.period$ -- 20
+call.type$ -- 4
+change.case$ -- 22
+chr.to.int$ -- 4
+cite$ -- 4
+duplicate$ -- 54
+empty$ -- 100
+format.name$ -- 18
+if$ -- 272
 int.to.chr$ -- 1
 int.to.str$ -- 0
-missing$ -- 4
-newline$ -- 33
-num.names$ -- 15
-pop$ -- 25
+missing$ -- 3
+newline$ -- 27
+num.names$ -- 12
+pop$ -- 11
 preamble$ -- 1
-purify$ -- 33
+purify$ -- 26
 quote$ -- 0
-skip$ -- 50
+skip$ -- 40
 stack$ -- 0
-substring$ -- 78
-swap$ -- 10
+substring$ -- 79
+swap$ -- 8
 text.length$ -- 1
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 36
+type$ -- 32
 warning$ -- 0
-while$ -- 14
-width$ -- 8
-write$ -- 70
+while$ -- 13
+width$ -- 7
+write$ -- 58
