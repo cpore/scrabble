@@ -6,6 +6,22 @@ Appel, A.~W., and Jacobson, G.~J.
 \newblock The world's fastest scrabble program.
 \newblock {\em Commun. ACM} 31(5):572--578.
 
+\bibitem[\protect\citeauthoryear{icantrap (Github~User)}{2013}]{icantrap}
+icantrap (Github~User).
+\newblock 2013.
+\newblock android-dawg.
+\newblock https://github.com/icantrap/android-dawg.
+\newblock Accessed: 2015-05-01.
+
+\bibitem[\protect\citeauthoryear{{North American Scrabble Players
+  Association}}{2009}]{naspa}
+{North American Scrabble Players Association}.
+\newblock 2009.
+\newblock Official tournament and club word list.
+\newblock http://www.scrabbleplayers.org/w/Official\_Tournament\_and\_\newline
+  Club\_Word\_List.
+\newblock Accessed: 2015-05-01.
+
 \bibitem[\protect\citeauthoryear{Schaeffer}{2001}]{Schaeffer2001}
 Schaeffer, J.
 \newblock 2001.
@@ -18,10 +34,24 @@ Shapiro, S.~C., and Smith, H.~R.
 \newblock A scrabble crossword game playing program.
 \newblock Technical Report 119, Indiana University.
 
-\bibitem[\protect\citeauthoryear{Sheppard}{2002}]{1sheppard2002}
+\bibitem[\protect\citeauthoryear{Sheppard}{2002a}]{2sheppard2002}
 Sheppard, B.
-\newblock 2002.
+\newblock 2002a.
+\newblock {\em Towards Perfect Play of Scrabble.}
+\newblock Ph.D. Dissertation, Universiteit Maastricht.
+
+\bibitem[\protect\citeauthoryear{Sheppard}{2002b}]{1sheppard2002}
+Sheppard, B.
+\newblock 2002b.
 \newblock World-championship-caliber scrabble.
 \newblock {\em Artificial Intelligence} 134(1):241--275.
+
+\bibitem[\protect\citeauthoryear{wsanville@gmail.com (Google
+  Code~User)}{2010}]{sharpscrabble}
+wsanville@gmail.com (Google Code~User).
+\newblock 2010.
+\newblock scharpscrabble.
+\newblock https://code.google.com/p/sharpscrabble/.
+\newblock Accessed: 2015-05-01.
 
 \end{thebibliography}
