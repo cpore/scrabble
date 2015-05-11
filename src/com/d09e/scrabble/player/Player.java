@@ -339,7 +339,7 @@ public abstract class Player implements Jsonizable{
 			}
 
 		}
-		return delta < rackValue ? delta : rackValue;
+		return delta - rackValue < 0 ? delta : 0;
 
 	}
 

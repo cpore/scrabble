@@ -90,8 +90,8 @@ public class Scrabble {
 	public static void main(String[] args) {
 
 		if(automate){
-			final int ITERATIONS = 100;
-			new Automator().go(ITERATIONS, PlayerFactory.MULTI4, PlayerFactory.MAX_SCORE);
+			final int ITERATIONS = 10;
+			new Automator().go(ITERATIONS, PlayerFactory.TILE_TURNOVER, PlayerFactory.MAX_SCORE);
 		}else{
 			Player p1 = new MaxScorePlayer("MaxScorePlayer");
 			Player p2 = new MaxScorePlayer("MaxScorePlayer");
